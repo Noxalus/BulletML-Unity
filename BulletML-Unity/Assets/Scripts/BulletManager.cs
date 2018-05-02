@@ -24,6 +24,11 @@ public class BulletManager : MonoBehaviour, IBulletManager
         return new BulletML.Vector2(Player.transform.position.x, Player.transform.position.y);
     }
 
+    public int BulletsCount()
+    {
+        return _bullets.Count;
+    }
+
     void Start()
     {
         GameManager.GameDifficulty = GetDifficulty;
