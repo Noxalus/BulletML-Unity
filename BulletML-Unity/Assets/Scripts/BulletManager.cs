@@ -32,7 +32,10 @@ public class BulletManager : MonoBehaviour, IBulletManager
     public GameObject InstantiateBulletPrefabs(int prefabIndex)
     {
         if (prefabIndex >= BulletPrefabs.Count)
+        {
+            Debug.Log("No prefab for index: " + prefabIndex);
             return null;
+        }
 
         return Instantiate(BulletPrefabs[prefabIndex]);
     }
@@ -61,13 +64,10 @@ public class BulletManager : MonoBehaviour, IBulletManager
     public void Update()
     {
         for (int i = 0; i < _bullets.Count; i++)
-        {
-            Debug.Log("Update");
-            _bullets[i].Update();
-        }
+            _bullets[i].Update(Time.deltaTime);
 
         for (int i = 0; i < _topLevelBullets.Count; i++)
-            _topLevelBullets[i].Update();
+            _topLevelBullets[i].Update(Time.deltaTime);
 
         ClearDeadBullets();
     }
@@ -97,5 +97,10 @@ public class BulletManager : MonoBehaviour, IBulletManager
     {
         _bullets.Clear();
         _topLevelBullets.Clear();
+    }
+
+    public void DestroyGameObject(GameObject gameObject)
+    {
+        Destroy(gameObject);
     }
 }

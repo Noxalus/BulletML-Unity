@@ -59,9 +59,4 @@ public class BulletEmitter : MonoBehaviour
 
         return loadedPattern;
     }
-
-    private void Update()
-    {
-        _rootBullet.Update();
-    }
 }

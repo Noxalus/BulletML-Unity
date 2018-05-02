@@ -4,7 +4,7 @@
   <action label="top">
     <fire>
       <bullet>
-        <direction type="absolute">0</direction>
+        <direction type="absolute">180</direction>
         <speed>0.1</speed>
       </bullet>
     </fire>
