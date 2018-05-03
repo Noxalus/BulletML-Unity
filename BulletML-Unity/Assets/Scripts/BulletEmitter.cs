@@ -28,8 +28,12 @@ public class BulletEmitter : MonoBehaviour
             BulletManager.Clear();
 
         _rootBullet = (Bullet)BulletManager.CreateBullet(true);
-        _rootBullet.Position = transform.position;
-        _rootBullet.InitTopNode(_pattern.RootNode);
+
+        if (_rootBullet != null)
+        {
+            _rootBullet.Position = transform.position;
+            _rootBullet.InitTopNode(_pattern.RootNode);
+        }
     }
 
     public void ParsePattern()

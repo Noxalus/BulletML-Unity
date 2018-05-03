@@ -175,6 +175,7 @@ MonoBehaviour:
   - {fileID: 1216219728702886, guid: eb2116ca147491842aadd4646d83aac3, type: 2}
   - {fileID: 1912299725428878, guid: 5c4770a606b119b4784522e7c750b9d6, type: 2}
   - {fileID: 1375944658029614, guid: 1eabbf30a4833654f84773bfe11955b3, type: 2}
+  MaximumBullet: 200
 --- !u!4 &228731763 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4836683501223102, guid: 1eabbf30a4833654f84773bfe11955b3,
@@ -589,7 +590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147aaeb6501865746ac0defcf13e9289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PatternFile: {fileID: 4900000, guid: 1e9fd8812d97b324596ce63e845e8923, type: 3}
+  PatternFile: {fileID: 4900000, guid: bd04874e2e87ad1498e34a83f7401e9c, type: 3}
   BulletManager: {fileID: 86426610}
 --- !u!1001 &1352927536
 Prefab:

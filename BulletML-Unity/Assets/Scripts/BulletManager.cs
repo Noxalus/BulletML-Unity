@@ -7,6 +7,7 @@ public class BulletManager : MonoBehaviour, IBulletManager
     public float Difficulty;
     public GameObject Player;
     public List<GameObject> BulletPrefabs;
+    public int MaximumBullet;
 
     private readonly List<Bullet> _bullets = new List<Bullet>();
     private readonly List<Bullet> _topLevelBullets = new List<Bullet>();
@@ -50,10 +51,13 @@ public class BulletManager : MonoBehaviour, IBulletManager
         var bullet = new Bullet(this, gameObject);
         bullet.Init();
 
-        if (topBullet)
-            _topLevelBullets.Add(bullet);
-        else
-            _bullets.Add(bullet);
+        if (_bullets.Count < MaximumBullet)
+        {
+            if (topBullet)
+                _topLevelBullets.Add(bullet);
+            else
+                _bullets.Add(bullet);
+        }
 
         return bullet;
     }
