@@ -12,6 +12,8 @@ public class BulletManager : MonoBehaviour, IBulletManager
     private readonly List<Bullet> _bullets = new List<Bullet>();
     private readonly List<Bullet> _topLevelBullets = new List<Bullet>();
 
+    private Dictionary<int, Queue<GameObject>> _bulletsPools;
+
     private float GetDifficulty()
     {
         return Difficulty;
@@ -33,6 +35,33 @@ public class BulletManager : MonoBehaviour, IBulletManager
     void Start()
     {
         GameManager.GameDifficulty = GetDifficulty;
+
+        _bulletsPools = new Dictionary<int, Queue<GameObject>>();
+
+        //for (var bulletTypeIndex = 0; bulletTypeIndex < BulletPrefabs.Count; bulletTypeIndex++)
+        //{
+        //    var bulletTypeQueue = new Queue<GameObject>();
+        //    for (int i = 0; i < MaximumBullet; i++)
+        //    {
+        //        var newBullet = Instantiate(BulletPrefabs[bulletTypeIndex]);
+        //        newBullet.SetActive(false);
+        //        bulletTypeQueue.Enqueue(newBullet);
+        //    }
+
+        //    _bulletsPools.Add(bulletTypeIndex, bulletTypeQueue);
+        //}
+    }
+
+    public GameObject InstantiateBulletFromPool(int prefabIndex)
+    {
+        if (_bulletsPools[prefabIndex].Count == 0)
+            return null;
+
+        var bullet = _bulletsPools[prefabIndex].Dequeue();
+        bullet.SetActive(true);
+        _bulletsPools[prefabIndex].Enqueue(bullet);
+
+        return bullet;
     }
 
     public GameObject InstantiateBulletPrefabs(int prefabIndex)
@@ -51,7 +80,7 @@ public class BulletManager : MonoBehaviour, IBulletManager
         var bullet = new Bullet(this, gameObject);
         bullet.Init();
 
-        if (_bullets.Count < MaximumBullet)
+        //if (_bullets.Count < MaximumBullet)
         {
             if (topBullet)
                 _topLevelBullets.Add(bullet);

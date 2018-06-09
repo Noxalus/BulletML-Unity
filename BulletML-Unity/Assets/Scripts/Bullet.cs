@@ -43,24 +43,27 @@ public class Bullet : BulletML.Bullet
         _currentSpriteIndex = SpriteIndex;
         _bulletManager.DestroyGameObject(_gameObject);
         _gameObject = _bulletManager.InstantiateBulletPrefabs(SpriteIndex);
-        _spriteRenderer = _gameObject.GetComponent<SpriteRenderer>();
+        //_gameObject = _bulletManager.InstantiateBulletFromPool(SpriteIndex);
+
+        if (_gameObject)
+            _spriteRenderer = _gameObject.GetComponent<SpriteRenderer>();
     }
 
     public override void Update(float dt)
     {
         base.Update(dt);
 
-        if (_gameObject != null)
+        if (_gameObject)
         {
             _gameObject.transform.position = Position / _spriteRenderer.sprite.pixelsPerUnit;
-            _gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
-            _gameObject.transform.Rotate(0, 0, Direction * Mathf.Rad2Deg);
+            //_gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
+            //_gameObject.transform.Rotate(0, 0, Direction * Mathf.Rad2Deg);
 
-            _gameObject.transform.localScale = new Vector3(Scale, Scale, Scale);
-            _spriteRenderer.color = new Color(Color.R / 255f, Color.G / 255f, Color.B / 255f, Color.A / 255f);
+            //_gameObject.transform.localScale = new Vector3(Scale, Scale, Scale);
+            //_spriteRenderer.color = new Color(Color.R / 255f, Color.G / 255f, Color.B / 255f, Color.A / 255f);
 
-            if (_currentSpriteIndex != SpriteIndex)
-                ChangePrefab();
+            //if (_currentSpriteIndex != SpriteIndex)
+            //    ChangePrefab();
         }
     }
 }

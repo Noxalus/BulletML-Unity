@@ -3,20 +3,20 @@
 <bulletml>
   <action label="top">
     <repeat>
-      <times>0</times>
+      <times>10000</times>
       <action>
-        <repeat>
-          <times>10</times>
-          <action>
-            <fire>
-              <bullet>
-                <direction type="absolute">$rand * 360</direction>
-                <speed>0.5</speed>
-              </bullet>
-            </fire>
-            <wait>0</wait>
-          </action>
-        </repeat>
+        <fire>
+          <bullet>
+            <direction type="absolute">$rand * 360</direction>
+            <speed type="absolute">0.001 + $rand * 0.1</speed>
+            <action>
+              <changeSpeed>
+                <speed>0</speed>
+                <term>10000</term>
+              </changeSpeed>
+            </action>
+          </bullet>
+        </fire>
         <wait>1</wait>
       </action>
     </repeat>

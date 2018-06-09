@@ -13,6 +13,6 @@ public class BulletManagerUI : MonoBehaviour {
 
     void Update()
     {
-        _text.text = "Bullets: " + BulletManager.BulletsCount();
+        _text.text = "Bullets: " + BulletManager.BulletsCount() + "(FPS: " + (1f / Time.deltaTime) + ")";
     }
 }
