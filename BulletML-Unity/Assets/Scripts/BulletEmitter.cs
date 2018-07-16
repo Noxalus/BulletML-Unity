@@ -31,8 +31,8 @@ public class BulletEmitter : MonoBehaviour
 
         if (_rootBullet != null)
         {
-            _rootBullet.Position = transform.position;
             _rootBullet.InitTopNode(_pattern.RootNode);
+            _rootBullet.Position = transform.position;
         }
     }
 

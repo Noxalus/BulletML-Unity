@@ -8,11 +8,12 @@ public class BulletManager : MonoBehaviour, IBulletManager
     public GameObject Player;
     public List<GameObject> BulletPrefabs;
     public int MaximumBullet;
+    public GameObject BulletHolder;
 
     private readonly List<Bullet> _bullets = new List<Bullet>();
     private readonly List<Bullet> _topLevelBullets = new List<Bullet>();
 
-    private Dictionary<int, Queue<GameObject>> _bulletsPools;
+    private Queue<GameObject> _bulletsPools;
 
     private float GetDifficulty()
     {
@@ -36,30 +37,27 @@ public class BulletManager : MonoBehaviour, IBulletManager
     {
         GameManager.GameDifficulty = GetDifficulty;
 
-        _bulletsPools = new Dictionary<int, Queue<GameObject>>();
+        _bulletsPools = new Queue<GameObject>();
 
-        //for (var bulletTypeIndex = 0; bulletTypeIndex < BulletPrefabs.Count; bulletTypeIndex++)
-        //{
-        //    var bulletTypeQueue = new Queue<GameObject>();
-        //    for (int i = 0; i < MaximumBullet; i++)
-        //    {
-        //        var newBullet = Instantiate(BulletPrefabs[bulletTypeIndex]);
-        //        newBullet.SetActive(false);
-        //        bulletTypeQueue.Enqueue(newBullet);
-        //    }
+        var circleCollider2d = BulletPrefabs[0].GetComponent<CircleCollider2D>();
 
-        //    _bulletsPools.Add(bulletTypeIndex, bulletTypeQueue);
-        //}
+        for (int i = 0; i < MaximumBullet; i++)
+        {
+            var newBullet = Instantiate(BulletPrefabs[0], BulletHolder != null ? BulletHolder.transform : null);
+            newBullet.SetActive(false);
+            _bulletsPools.Enqueue(newBullet);
+        }
     }
 
-    public GameObject InstantiateBulletFromPool(int prefabIndex)
+    public GameObject InstantiateBulletFromPool()
     {
-        if (_bulletsPools[prefabIndex].Count == 0)
+        if (_bulletsPools.Count == 0)
             return null;
 
-        var bullet = _bulletsPools[prefabIndex].Dequeue();
+        var bullet = _bulletsPools.Dequeue();
+
         bullet.SetActive(true);
-        _bulletsPools[prefabIndex].Enqueue(bullet);
+        _bulletsPools.Enqueue(bullet);
 
         return bullet;
     }
@@ -77,7 +75,7 @@ public class BulletManager : MonoBehaviour, IBulletManager
 
     public IBullet CreateBullet(bool topBullet = false)
     {
-        var bullet = new Bullet(this, gameObject);
+        var bullet = new Bullet(this);
         bullet.Init();
 
         //if (_bullets.Count < MaximumBullet)
@@ -140,5 +138,13 @@ public class BulletManager : MonoBehaviour, IBulletManager
     public void DestroyGameObject(GameObject gameObject)
     {
         Destroy(gameObject);
+    }
+
+    public GameObject GetBulletPrefab(int spriteIndex)
+    {
+        if (BulletPrefabs.Count <= spriteIndex)
+            return null;
+
+        return BulletPrefabs[spriteIndex];
     }
 }
