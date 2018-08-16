@@ -13,7 +13,7 @@
               <sprite>1</sprite>
             </bullet>
           </fire>
-          <wait>60</wait>
+          <wait>30</wait>
         </action>
       </repeat>
     </action>
