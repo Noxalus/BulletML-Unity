@@ -3786,8 +3786,8 @@ ParticleSystem:
     collisionShape3: {fileID: 0}
     collisionShape4: {fileID: 0}
     collisionShape5: {fileID: 0}
-    inside: 2
-    outside: 2
+    inside: 0
+    outside: 0
     enter: 2
     exit: 2
     radiusScale: 1
@@ -5290,7 +5290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147aaeb6501865746ac0defcf13e9289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PatternFile: {fileID: 4900000, guid: 558835351d49550469ab78f9531ba16f, type: 3}
+  PatternFile: {fileID: 4900000, guid: bd04874e2e87ad1498e34a83f7401e9c, type: 3}
   BulletManager: {fileID: 86426610}
 --- !u!1001 &1352927536
 Prefab:
