@@ -38,7 +38,7 @@ public class Bullet : BulletML.Bullet
 
         //_bulletManager.DestroyGameObject(_gameObject);
         //_gameObject = _bulletManager.InstantiateBulletPrefabs(SpriteIndex);
-        _gameObject = _bulletManager.InstantiateBulletFromPool();
+        //_gameObject = _bulletManager.InstantiateBulletFromPool();
 
         if (_gameObject)
         {
@@ -46,7 +46,7 @@ public class Bullet : BulletML.Bullet
             _collider = _gameObject.GetComponent<CircleCollider2D>();
         }
 
-        UpdateBaseData();
+        //UpdateBaseData();
     }
 
     private void UpdateBaseData()
@@ -83,6 +83,6 @@ public class Bullet : BulletML.Bullet
     {
         base.Update(dt);
 
-        UpdateData();
+        //UpdateData();
     }
 }

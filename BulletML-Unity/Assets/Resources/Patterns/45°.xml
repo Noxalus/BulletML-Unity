@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<!DOCTYPE bulletml SYSTEM "bulletml.dtd">
+<bulletml>
+  <action label="top">
+    <action>
+      <repeat>
+        <times>0</times>
+        <action>
+          <fire>
+            <bullet>
+              <direction type="sequence">45</direction>
+              <speed>1</speed>
+              <sprite>1</sprite>
+            </bullet>
+          </fire>
+          <wait>60</wait>
+        </action>
+      </repeat>
+    </action>
+
+  </action>
+</bulletml>
