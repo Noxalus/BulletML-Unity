@@ -118,7 +118,7 @@ public class BulletManager : MonoBehaviour, IBulletManager
             var emitParams = new ParticleSystem.EmitParams
             {
                 position = bullet.Position,
-                startSize = 0.25f,
+                startSize = 1f,
                 startLifetime = 9999f,
                 startColor = UnityEngine.Color.yellow
             };
@@ -174,14 +174,64 @@ public class BulletManager : MonoBehaviour, IBulletManager
         for (int i = 0; i < _bulletParticles.Length; i++)
         {
             _bulletParticles[i].position = _bullets[i].Position / 100f;
-            _bulletParticles[i].rotation = _bullets[i].Direction * Mathf.Rad2Deg;
+            _bulletParticles[i].rotation = _bullets[i].Direction * Mathf.Rad2Deg + 180f;
             _bulletParticles[i].startColor = new UnityEngine.Color(_bullets[i].Color.R / 255f, _bullets[i].Color.G / 255f, _bullets[i].Color.B / 255f, _bullets[i].Color.A / 255f);
-            _bulletParticles[i].startSize = 0.25f;
+            _bulletParticles[i].startSize = 1f * _bullets[i].Scale;
+            _bulletParticles[i].randomSeed = GetRandomFromSpriteIndex(_bullets[i].SpriteIndex);
+            // 8 -> 7 | 7 -> 4 | 6 -> 5 | 5 -> 0 | 4 -> 5 | 3 -> 7 | 2 -> 2 | 1 -> 3 | 0 -> 1 | 9 -> 3
+            // 9 -> 3 | 8 -> 6 | 7 -> 2 | 6 -> 5 | 5 -> 0 | 4 -> 4 | 3 -> 7 | 2 -> 2 | 1 -> 6 | 0 -> 1
+            // 0 -> 5 | 1 -> 0 | 2 -> 2 (7) | 3 -> 9 | 4 -> 4 | 5 -> 6 | 6 -> 1 (8) | 7 -> 3
+
+            //_bulletParticles[i].randomValue = 0.5f;
         }
 
         ParticleSystem.SetParticles(_bulletParticles, _bulletParticles.Length);
 
         ClearDeadBullets();
+    }
+
+    private uint GetRandomFromSpriteIndex(int spriteIndex)
+    {
+        if (spriteIndex == 0)
+            return 5u;
+        if (spriteIndex == 1)
+            return 0u;
+        if (spriteIndex == 2)
+            return 2u;
+        if (spriteIndex == 3)
+            return 9u;
+        if (spriteIndex == 4)
+            return 4u;
+        if (spriteIndex == 5)
+            return 6u;
+        if (spriteIndex == 6)
+            return 1u;
+        if (spriteIndex == 7)
+            return 3u;
+
+        return 5u;
+    }
+
+    private float GetRadiusFromSpriteIndex(int spriteIndex)
+    {
+        if (spriteIndex == 0)
+            return 0.15f;
+        if (spriteIndex == 1)
+            return 0.1f;
+        if (spriteIndex == 2)
+            return 0.2f;
+        if (spriteIndex == 3)
+            return 0.15f;
+        if (spriteIndex == 4)
+            return 0.3f;
+        if (spriteIndex == 5)
+            return 0.45f;
+        if (spriteIndex == 6)
+            return 0.7f;
+        if (spriteIndex == 7)
+            return 0f;
+
+        return 1f;
     }
 
     private void ClearDeadBullets()

@@ -23,7 +23,7 @@
         <times>0</times>
         <action>
           <changeScale>
-            <scale>1.5</scale>
+            <scale>5</scale>
             <term>50</term>
           </changeScale>
           <wait>50</wait>

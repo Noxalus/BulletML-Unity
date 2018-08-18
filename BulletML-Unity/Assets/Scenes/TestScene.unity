@@ -207,7 +207,7 @@ ParticleSystem:
   prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
-  autoRandomSeed: 0
+  autoRandomSeed: 1
   useRigidbodyForVelocity: 0
   startDelay:
     serializedVersion: 2
@@ -265,7 +265,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 321143688
+  randomSeed: 0
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -961,7 +961,7 @@ ParticleSystem:
           m_PostInfinity: 2
           m_RotationOrder: 4
   EmissionModule:
-    enabled: 0
+    enabled: 1
     serializedVersion: 4
     rateOverTime:
       serializedVersion: 2
@@ -1461,13 +1461,13 @@ ParticleSystem:
         m_NumColorKeys: 2
         m_NumAlphaKeys: 2
   UVModule:
-    enabled: 0
+    enabled: 1
     mode: 0
     frameOverTime:
       serializedVersion: 2
-      minMaxState: 1
-      scalar: 0.9999
-      minScalar: 0.9999
+      minMaxState: 0
+      scalar: 0
+      minScalar: 0
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1475,16 +1475,16 @@ ParticleSystem:
           time: 0
           value: 0
           inSlope: 0
-          outSlope: 1
+          outSlope: 0
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 1
+          value: 0
           inSlope: 1
-          outSlope: 0
+          outSlope: 1
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
@@ -1570,16 +1570,16 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     tilesX: 1
-    tilesY: 1
-    animationType: 0
-    rowIndex: 0
+    tilesY: 8
+    animationType: 1
+    rowIndex: 6
     cycles: 1
     uvChannelMask: -1
     flipU: 0
     flipV: 0
     randomRow: 1
     sprites:
-    - sprite: {fileID: 0}
+    - sprite: {fileID: 21300000, guid: 77113ab205d8a5248b4e720bb9f27c7b, type: 3}
   VelocityModule:
     enabled: 0
     x:
@@ -3790,7 +3790,7 @@ ParticleSystem:
     outside: 0
     enter: 2
     exit: 2
-    radiusScale: 1
+    radiusScale: 0.7
   SubModule:
     serializedVersion: 2
     enabled: 0
@@ -4742,7 +4742,7 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 83b4b52a4ee56634eac1c5ba3164b593, type: 2}
+  - {fileID: 2100000, guid: 53da09899c58e1a45b6f4be5fda01abe, type: 2}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
