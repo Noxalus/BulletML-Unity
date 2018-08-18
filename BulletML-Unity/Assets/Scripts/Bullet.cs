@@ -83,6 +83,16 @@ public class Bullet : BulletML.Bullet
     {
         base.Update(dt);
 
-        //UpdateData();
+        if (CheckOutOfBound())
+            Used = false;
+    }
+
+    public bool CheckOutOfBound()
+    {
+        var screenSpacePosition = Camera.main.WorldToViewportPoint(Position / 100f);
+
+        return 
+            !((screenSpacePosition.x >= 0 && screenSpacePosition.x <= 1) &&
+            (screenSpacePosition.y >= 0 && screenSpacePosition.y <= 1));
     }
 }
