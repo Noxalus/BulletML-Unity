@@ -2,6 +2,11 @@
 using UnityEngine;
 using BulletML;
 using System.Linq;
+using Unity.Entities;
+using Unity.Rendering;
+using Unity.Transforms2D;
+using Unity.Transforms;
+using Unity.Mathematics;
 
 public class BulletManager : MonoBehaviour, IBulletManager
 {
@@ -14,6 +19,47 @@ public class BulletManager : MonoBehaviour, IBulletManager
     private readonly List<Bullet> _bullets = new List<Bullet>();
 
     private Queue<GameObject> _bulletsPools;
+
+    private static EntityManager _entityManager;
+    private static MeshInstanceRenderer _bulletRenderer;
+    private static EntityArchetype _bulletArchetype;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    public static void Initialize()
+    {
+        _entityManager = World.Active.GetOrCreateManager<EntityManager>();
+
+        _bulletArchetype = _entityManager.CreateArchetype(
+            typeof(Position2D),
+            typeof(Heading2D),
+            typeof(TransformMatrix),
+            typeof(MoveSpeed)
+        );
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    public static void InitializeWithScene()
+    {
+        _bulletRenderer = FindObjectOfType<MeshInstanceRendererComponent>().Value;
+
+        for (int i = 0; i < 2500; i++)
+        {
+            SpawnBullet();
+        }
+    }
+
+    private static void SpawnBullet()
+    {
+        Entity bulletEntity = _entityManager.CreateEntity(_bulletArchetype);
+
+        float2 direction = new float2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+
+        _entityManager.SetComponentData(bulletEntity, new Position2D { Value = new float2(0, 0) });
+        _entityManager.SetComponentData(bulletEntity, new Heading2D { Value = direction });
+        _entityManager.SetComponentData(bulletEntity, new MoveSpeed { speed = 1 });
+
+        _entityManager.AddSharedComponentData(bulletEntity, _bulletRenderer);
+    }
 
     // Particles
     public ParticleSystem ParticleSystem;
