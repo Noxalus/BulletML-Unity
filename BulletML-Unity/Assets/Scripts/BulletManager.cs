@@ -12,6 +12,7 @@ public class BulletManager : MonoBehaviour, IBulletManager
 {
     public float Difficulty;
     public GameObject Player;
+    
     public List<GameObject> BulletPrefabs;
     public int MaximumBullet;
     public GameObject BulletHolder;
@@ -20,8 +21,10 @@ public class BulletManager : MonoBehaviour, IBulletManager
 
     private Queue<GameObject> _bulletsPools;
 
+    private static SpriteInstanceRenderer[] _renderers;
+
     private static EntityManager _entityManager;
-    private static MeshInstanceRenderer _bulletRenderer;
+    private static SpriteInstanceRenderer _bulletRenderer;
     private static EntityArchetype _bulletArchetype;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -32,33 +35,75 @@ public class BulletManager : MonoBehaviour, IBulletManager
         _bulletArchetype = _entityManager.CreateArchetype(
             typeof(Position2D),
             typeof(Heading2D),
-            typeof(TransformMatrix),
-            typeof(MoveSpeed)
+            typeof(TransformMatrix)
         );
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     public static void InitializeWithScene()
     {
-        _bulletRenderer = FindObjectOfType<MeshInstanceRendererComponent>().Value;
-
-        for (int i = 0; i < 2500; i++)
+        //Load all the sprites we need
+        var bulletSprites = new[]
         {
-            SpawnBullet();
+            Resources.Load<Texture2D>("Sprites/elephant"),
+            Resources.Load<Texture2D>("Sprites/giraffe"),
+            Resources.Load<Texture2D>("Sprites/zebra")
+        };
+
+        //Assign loaded sprites to sprite renderers
+        _renderers = new []
+        {
+            new SpriteInstanceRenderer(bulletSprites[0], bulletSprites[0].width, new float2(0.5f, 0.5f)),
+            new SpriteInstanceRenderer(bulletSprites[1], bulletSprites[1].width, new float2(0.5f, 0.5f)),
+            new SpriteInstanceRenderer(bulletSprites[2], bulletSprites[2].width, new float2(0.5f, 0.5f)),
+        };
+
+        ////Assign loaded sprites to sprite renderers
+        //var renderers = new SpriteInstanceRenderer[BulletPrefabs.Count];
+
+        //for (var i = 0; i < BulletPrefabs.Count; i++)
+        //{
+        //    var spriteRenderer = BulletPrefabs[i].GetComponent<SpriteRenderer>();
+        //    var spriteInstanceRenderer = new SpriteInstanceRenderer(spriteRenderer.sprite.texture, (int)spriteRenderer.sprite.pixelsPerUnit, new float2(0.5f, 0.5f));
+
+        //    renderers[i] = spriteInstanceRenderer;
+        //}
+
+        _bulletRenderer = _renderers[0];
+
+        for (int i = 0; i < 10000; i++)
+        {
+            SpawnBullet(i);
         }
     }
 
-    private static void SpawnBullet()
+    private static void SpawnBullet(int index)
     {
-        Entity bulletEntity = _entityManager.CreateEntity(_bulletArchetype);
+        var entity = _entityManager.CreateEntity(ComponentType.Create<Position2D>(),
+                                                 ComponentType.Create<Heading2D>(),
+                                                 ComponentType.Create<TransformMatrix>());
 
-        float2 direction = new float2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+        _entityManager.SetComponentData(entity, new Position2D
+        {
+            Value = new float2((Random.value - 1f + 0.5f) * 15, (Random.value - 1f + 0.5f) * 19)
+        });
 
-        _entityManager.SetComponentData(bulletEntity, new Position2D { Value = new float2(0, 0) });
-        _entityManager.SetComponentData(bulletEntity, new Heading2D { Value = direction });
-        _entityManager.SetComponentData(bulletEntity, new MoveSpeed { speed = 1 });
+        _entityManager.SetComponentData(entity, new Heading2D
+        {
+            Value = new float2(Random.value, Random.value)
+        });
 
-        _entityManager.AddSharedComponentData(bulletEntity, _bulletRenderer);
+        _entityManager.AddSharedComponentData(entity, _renderers[index % 3]);
+
+        //Entity bulletEntity = _entityManager.CreateEntity(_bulletArchetype);
+
+        //float2 direction = new float2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+
+        //_entityManager.SetComponentData(bulletEntity, new Position2D { Value = new float2(0, 0) });
+        //_entityManager.SetComponentData(bulletEntity, new Heading2D { Value = direction });
+        //_entityManager.SetComponentData(bulletEntity, new MoveSpeed { speed = 1 });
+
+        //_entityManager.AddSharedComponentData(bulletEntity, _bulletRenderer);
     }
 
     // Particles
