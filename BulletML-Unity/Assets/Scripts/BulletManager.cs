@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using BulletML;
-using System.Linq;
 using Unity.Entities;
-using Unity.Rendering;
-using Unity.Transforms2D;
 using Unity.Transforms;
 using Unity.Mathematics;
 
@@ -33,8 +30,8 @@ public class BulletManager : MonoBehaviour, IBulletManager
         _entityManager = World.Active.GetOrCreateManager<EntityManager>();
 
         _bulletArchetype = _entityManager.CreateArchetype(
-            typeof(Position2D),
-            typeof(Heading2D),
+            typeof(Position),
+            typeof(Rotation),
             typeof(TransformMatrix)
         );
     }
@@ -71,7 +68,7 @@ public class BulletManager : MonoBehaviour, IBulletManager
 
         _bulletRenderer = _renderers[0];
 
-        for (int i = 0; i < 10000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             SpawnBullet(i);
         }
@@ -79,19 +76,19 @@ public class BulletManager : MonoBehaviour, IBulletManager
 
     private static void SpawnBullet(int index)
     {
-        var entity = _entityManager.CreateEntity(ComponentType.Create<Position2D>(),
-                                                 ComponentType.Create<Heading2D>(),
+        var entity = _entityManager.CreateEntity(ComponentType.Create<Position>(),
+                                                 ComponentType.Create<Rotation>(),
                                                  ComponentType.Create<TransformMatrix>());
 
-        _entityManager.SetComponentData(entity, new Position2D
+        _entityManager.SetComponentData(entity, new Position
         {
-            Value = new float2((Random.value - 1f + 0.5f) * 15, (Random.value - 1f + 0.5f) * 19)
+            Value = new float3((Random.value - 1f + 0.5f) * 15, (Random.value - 1f + 0.5f) * 19, 0f)
         });
 
-        _entityManager.SetComponentData(entity, new Heading2D
-        {
-            Value = new float2(Random.value, Random.value)
-        });
+        //_entityManager.SetComponentData(entity, new Rotation
+        //{
+        //    Value = new quaternion(90f, 0f, 0f, 0f)
+        //});
 
         _entityManager.AddSharedComponentData(entity, _renderers[index % 3]);
 

@@ -1,6 +1,7 @@
 ﻿using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Transforms;
 using Unity.Transforms2D;
 using UnityEngine;
 
@@ -9,16 +10,30 @@ public class EntityMovementSystem : JobComponentSystem
 {
     [Inject] private Data data;
 
-    [Unity.Burst.BurstCompileAttribute]
-    struct PositionJob : IJobProcessComponentData<Position2D>
+    [Unity.Burst.BurstCompile]
+    struct PositionJob : IJobProcessComponentData<Position>
     {
         public float dt;
 
-        public void Execute(ref Position2D position)
+        public void Execute(ref Position position)
         {
             float wobbleX = Mathf.PerlinNoise(position.Value.x, position.Value.y) - 0.5f;
             float wobbleY = Mathf.PerlinNoise(position.Value.y, position.Value.x) - 0.5f;
-            position.Value += dt * new float2(wobbleX, wobbleY);
+
+            //position.Value.x += dt * 0.01f;
+
+            position.Value += dt * new float3(wobbleX, wobbleY, 0f);
+        }
+    }
+
+    [Unity.Burst.BurstCompile]
+    struct RotationJob : IJobProcessComponentData<Rotation>
+    {
+        public float dt;
+
+        public void Execute(ref Rotation rotation)
+        {
+            //rotation.Value.value.x += 10f * dt;
         }
     }
 
@@ -42,14 +57,17 @@ public class EntityMovementSystem : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        var job = new PositionJob() { dt = Time.deltaTime };
-        return job.Schedule(this, 64, inputDeps);
+        var positionJob = new PositionJob() { dt = Time.deltaTime };
+        return positionJob.Schedule(this, 64, inputDeps);
+
+        //var rotationJob = new RotationJob() { dt = Time.deltaTime };
+        //return rotationJob.Schedule(this, 64, inputDeps);
     }
 
     public struct Data
     {
         public readonly int Length;
-        public ComponentDataArray<Position2D> Position;
-        public ComponentDataArray<Heading2D> Heading;
+        public ComponentDataArray<Position> Position;
+        public ComponentDataArray<Rotation> Rotation;
     }
 }
