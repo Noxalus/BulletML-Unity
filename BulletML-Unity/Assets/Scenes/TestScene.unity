@@ -5342,13 +5342,13 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1252751606}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 147aaeb6501865746ac0defcf13e9289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PatternFile: {fileID: 0}
-  BulletManager: {fileID: 0}
+  PatternFile: {fileID: 4900000, guid: 738be7bbc35d7bd48b9fbc815e4f121a, type: 3}
+  BulletManager: {fileID: 86426610}
 --- !u!1001 &1352927536
 Prefab:
   m_ObjectHideFlags: 0
@@ -5774,7 +5774,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2008957723}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2, y: -0.61, z: 0}
+  m_LocalPosition: {x: 0, y: -2.503, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
