@@ -38,7 +38,7 @@ public class Bullet : BulletML.Bullet
 
         //_bulletManager.DestroyGameObject(_gameObject);
         //_gameObject = _bulletManager.InstantiateBulletPrefabs(SpriteIndex);
-        //_gameObject = _bulletManager.InstantiateBulletFromPool();
+        _gameObject = _bulletManager.InstantiateBulletFromPool();
 
         if (_gameObject)
         {
@@ -46,12 +46,17 @@ public class Bullet : BulletML.Bullet
             _collider = _gameObject.GetComponent<CircleCollider2D>();
         }
 
-        //UpdateBaseData();
+        UpdateBaseData();
     }
 
     private void UpdateBaseData()
     {
         var bulletPrefab = _bulletManager.GetBulletPrefab(_currentSpriteIndex);
+
+        if (bulletPrefab == null)
+        {
+            Debug.Log("Null: " + _currentSpriteIndex);
+        }
 
         var circleCollider = bulletPrefab.GetComponent<CircleCollider2D>();
         var spriteRenderer = bulletPrefab.GetComponent<SpriteRenderer>();
@@ -82,6 +87,8 @@ public class Bullet : BulletML.Bullet
     public override void Update(float dt)
     {
         base.Update(dt);
+
+        UpdateData();
 
         if (CheckOutOfBound())
             Used = false;
