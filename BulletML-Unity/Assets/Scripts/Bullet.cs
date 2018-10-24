@@ -22,6 +22,14 @@ public class Bullet : BulletML.Bullet
         set { Position.y = value; }
     }
 
+    public Matrix4x4 renderData
+    {
+        get
+        {
+            return Matrix4x4.TRS(Position / 100f, Quaternion.Euler(0f, 0f, Direction), new Vector3(Scale, Scale));
+        }
+    }
+
     public bool Used { get; set; }
 
     private BulletManager _bulletManager;
@@ -38,15 +46,15 @@ public class Bullet : BulletML.Bullet
 
         //_bulletManager.DestroyGameObject(_gameObject);
         //_gameObject = _bulletManager.InstantiateBulletPrefabs(SpriteIndex);
-        _gameObject = _bulletManager.InstantiateBulletFromPool();
+        //_gameObject = _bulletManager.InstantiateBulletFromPool();
 
-        if (_gameObject)
-        {
-            _spriteRenderer = _gameObject.GetComponent<SpriteRenderer>();
-            _collider = _gameObject.GetComponent<CircleCollider2D>();
-        }
+        //if (_gameObject)
+        //{
+        //    _spriteRenderer = _gameObject.GetComponent<SpriteRenderer>();
+        //    _collider = _gameObject.GetComponent<CircleCollider2D>();
+        //}
 
-        UpdateBaseData();
+        //UpdateBaseData();
     }
 
     private void UpdateBaseData()
@@ -88,7 +96,7 @@ public class Bullet : BulletML.Bullet
     {
         base.Update(dt);
 
-        UpdateData();
+        //UpdateData();
 
         if (CheckOutOfBound())
             Used = false;

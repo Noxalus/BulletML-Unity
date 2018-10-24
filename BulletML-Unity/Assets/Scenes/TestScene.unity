@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 86426609}
   - component: {fileID: 86426610}
   - component: {fileID: 86426611}
+  - component: {fileID: 86426612}
   m_Layer: 0
   m_Name: Root
   m_TagString: Untagged
@@ -173,6 +174,8 @@ MonoBehaviour:
   Player: {fileID: 396486024}
   BulletPrefabs:
   - {fileID: 658298609}
+  - {fileID: 327826465}
+  - {fileID: 1347790606}
   MaximumBullet: 10000
   BulletHolder: {fileID: 1871312563}
 --- !u!114 &86426611
@@ -187,6 +190,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e2bbff6824a4c744985eb19917d071c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &86426612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 86426608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 979562cfef099b44bb97c55ab631dbb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  material: {fileID: 2100000, guid: ed6e595783ba4d840846733017abea9b, type: 2}
+  BulletManager: {fileID: 86426610}
+  splashPool: []
 --- !u!4 &228731763 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4836683501223102, guid: 1eabbf30a4833654f84773bfe11955b3,
@@ -464,8 +483,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 252, y: -45}
-  m_SizeDelta: {x: 500, y: 46.01999}
+  m_AnchoredPosition: {x: 540.99994, y: -152}
+  m_SizeDelta: {x: 1078, y: 95}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &647826077
 MonoBehaviour:
@@ -480,7 +499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -489,11 +508,11 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
+    m_FontSize: 75
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 3
-    m_MaxSize: 40
+    m_MinSize: 1
+    m_MaxSize: 100
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -724,8 +743,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147aaeb6501865746ac0defcf13e9289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PatternFile: {fileID: 4900000, guid: 738be7bbc35d7bd48b9fbc815e4f121a, type: 3}
+  PatternFile: {fileID: 4900000, guid: bd04874e2e87ad1498e34a83f7401e9c, type: 3}
   BulletManager: {fileID: 86426610}
+--- !u!1 &1347790606 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1764606496573554, guid: 31aab00b36c7f57419f38b1de712d723,
+    type: 3}
+  m_PrefabInstance: {fileID: 1352927536}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1352927536
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -936,13 +961,13 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 2080749929}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 5
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0

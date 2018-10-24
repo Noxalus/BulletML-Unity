@@ -17,4 +17,14 @@ public static class MathUtils
 
         return direction;
     }
+        /// <summary>
+    /// Get an angle in degrees from a normalized direction clamped between 0° and 360°
+    /// </summary>
+    /// <param name="direction">Normalized direction</param>
+    /// <returns>Angle in degrees</returns>
+    public static float DirectionToAngle(Vector2 direction)
+    {
+        // +180° to shift the values from -180 -> 180 to 0 -> 360
+        return (-Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg) + 180f;
+    }
 }

@@ -44,14 +44,14 @@ public class BulletManager : MonoBehaviour, IBulletManager
 
         _bulletsPools = new Queue<GameObject>();
 
-        var circleCollider2d = BulletPrefabs[0].GetComponent<CircleCollider2D>();
+        //var circleCollider2d = BulletPrefabs[0].GetComponent<CircleCollider2D>();
 
-        for (int i = 0; i < MaximumBullet; i++)
-        {
-            var newBullet = Instantiate(BulletPrefabs[0], BulletHolder != null ? BulletHolder.transform : null);
-            newBullet.SetActive(false);
-            _bulletsPools.Enqueue(newBullet);
-        }
+        //for (int i = 0; i < MaximumBullet; i++)
+        //{
+        //    var newBullet = Instantiate(BulletPrefabs[0], BulletHolder != null ? BulletHolder.transform : null);
+        //    newBullet.SetActive(false);
+        //    _bulletsPools.Enqueue(newBullet);
+        //}
     }
 
     public GameObject InstantiateBulletFromPool()
