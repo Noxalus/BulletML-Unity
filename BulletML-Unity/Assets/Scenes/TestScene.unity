@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  material: {fileID: 2100000, guid: ed6e595783ba4d840846733017abea9b, type: 2}
+  material: {fileID: 2100000, guid: 344c9d3946d45764e907c0b1ea2ba107, type: 2}
   BulletManager: {fileID: 86426610}
   splashPool: []
 --- !u!4 &228731763 stripped

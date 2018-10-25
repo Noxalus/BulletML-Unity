@@ -18,6 +18,13 @@ public class BulletRenderer : MonoBehaviour
     private Vector3 transPoint;
     private List<Matrix4x4[]> bufferedData = new List<Matrix4x4[]>();
 
+    public void Awake()
+    {
+        var size = 1f;
+        var pivot = (Vector2.one / 2f) * size;
+        mesh = MeshUtils.GenerateQuad(size, pivot);
+    }
+
     private void Update()
     {
         BatchAndRender();
