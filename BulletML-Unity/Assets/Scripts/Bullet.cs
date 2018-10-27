@@ -26,7 +26,7 @@ public class Bullet : BulletML.Bullet
     {
         get
         {
-            return Matrix4x4.TRS(Position / 100f, Quaternion.Euler(0f, 0f, Direction), new Vector3(Scale, Scale));
+            return Matrix4x4.TRS(Position / 100f, Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Direction), new Vector3(Scale, Scale));
         }
     }
 
