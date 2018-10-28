@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BulletManager : MonoBehaviour, IBulletManager
 {
+    public const int MAX_BATCH_AMOUNT = 1023;
+
     public float Difficulty;
     public GameObject Player;
 
@@ -14,6 +16,8 @@ public class BulletManager : MonoBehaviour, IBulletManager
     private List<Bullet> _bullets = new List<Bullet>();
 
     private Queue<GameObject> _bulletsPools;
+
+    private List<Matrix4x4[]> _bulletMatricesBatches = new List<Matrix4x4[]>();
 
     private float GetDifficulty()
     {
@@ -31,6 +35,11 @@ public class BulletManager : MonoBehaviour, IBulletManager
     public List<Bullet> Bullets
     {
         get { return _bullets; }
+    }
+
+    public List<Matrix4x4[]> BulletMatrices
+    {
+        get { return _bulletMatricesBatches; }
     }
 
     public int BulletsCount()
@@ -102,7 +111,19 @@ public class BulletManager : MonoBehaviour, IBulletManager
     public void Update()
     {
         for (int i = 0; i < _bullets.Count; i++)
+        {
             _bullets[i].Update(Time.deltaTime);
+
+            int batchIndex = i / MAX_BATCH_AMOUNT;
+            int matrixIndex = i % MAX_BATCH_AMOUNT;
+
+            if (_bulletMatricesBatches.Count <= batchIndex)
+            {
+                _bulletMatricesBatches.Add(new Matrix4x4[MAX_BATCH_AMOUNT]);
+            }
+
+            _bulletMatricesBatches[batchIndex][matrixIndex] = _bullets[i].renderData;
+        }
 
         ClearDeadBullets();
     }

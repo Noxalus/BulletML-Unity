@@ -36,42 +36,8 @@ public class BulletRenderer : MonoBehaviour
         if (BulletManager.Bullets.Count <= 0)
             return;
 
-        //Clear the batch buffer
-        bufferedData.Clear();
-
-        //If we can fit all in 1 batch then do so
-        if (BulletManager.Bullets.Count < 1023)
-            bufferedData.Add(BulletManager.Bullets.Select(p => p.renderData).ToArray());
-        else
-        {
-            //We need multiple batches
-            int count = BulletManager.Bullets.Count;
-            for (int i = 0; i < count; i += 1023)
-            {
-                if (i + 1023 < count)
-                {
-                    Matrix4x4[] tBuffer = new Matrix4x4[1023];
-                    for (int ii = 0; ii < 1023; ii++)
-                    {
-                        tBuffer[ii] = BulletManager.Bullets[i + ii].renderData;
-                    }
-                    bufferedData.Add(tBuffer);
-                }
-                else
-                {
-                    //last batch
-                    Matrix4x4[] tBuffer = new Matrix4x4[count - i];
-                    for (int ii = 0; ii < count - i; ii++)
-                    {
-                        tBuffer[ii] = BulletManager.Bullets[i + ii].renderData;
-                    }
-                    bufferedData.Add(tBuffer);
-                }
-            }
-        }
-
         //Draw each batch
-        foreach (var batch in bufferedData)
+        foreach (var batch in BulletManager.BulletMatrices)
             Graphics.DrawMeshInstanced(mesh, 0, material, batch, batch.Length);
     }
 

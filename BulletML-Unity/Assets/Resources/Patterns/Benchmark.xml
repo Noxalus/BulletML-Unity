@@ -6,7 +6,7 @@
       <times>10000</times>
       <action>
         <repeat>
-          <times>1</times>
+          <times>10</times>
           <action>
             <fire>
               <bullet>
