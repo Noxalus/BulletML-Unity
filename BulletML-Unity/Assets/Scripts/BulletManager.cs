@@ -108,11 +108,11 @@ public class BulletManager : MonoBehaviour, IBulletManager
             bullet.Used = false;
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         for (int i = 0; i < _bullets.Count; i++)
         {
-            _bullets[i].Update(Time.deltaTime);
+            _bullets[i].Update(Time.fixedDeltaTime);
 
             int batchIndex = i / MAX_BATCH_AMOUNT;
             int matrixIndex = i % MAX_BATCH_AMOUNT;
