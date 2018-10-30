@@ -3,6 +3,7 @@ Shader "Sprites/Instanced"
   Properties
   {
     _MainTex ("Texture", 2D) = "white" {}
+    _Color ("Tint", Color) = (1,1,1,1)
   }
   SubShader
   {
@@ -23,16 +24,19 @@ Shader "Sprites/Instanced"
         float4 vertex : POSITION;
           UNITY_VERTEX_INPUT_INSTANCE_ID
         float2 uv : TEXCOORD0;
+        float4 color : COLOR;
       };
 
       struct v2f
       {
         float2 uv : TEXCOORD0;
         float4 vertex : SV_POSITION;
+        fixed4 color : COLOR;
       };
 
       sampler2D _MainTex;
       float4 _MainTex_ST;
+      fixed4 _Color;
 
       // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
       // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -47,15 +51,18 @@ Shader "Sprites/Instanced"
         UNITY_SETUP_INSTANCE_ID(v);
         o.vertex = UnityObjectToClipPos(v.vertex);
         o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+        o.color = v.color * _Color;
+
         return o;
       }
 
       fixed4 frag (v2f i) : SV_Target
       {
         // sample the texture
-        fixed4 col = tex2D(_MainTex, i.uv);
-        // col = fixed4(1, 0, 0, 1);
-        return col;
+        fixed4 c = tex2D(_MainTex, i.uv) * i.color;
+        c.rgb *= c.a;
+
+        return c;
       }
       ENDCG
     }

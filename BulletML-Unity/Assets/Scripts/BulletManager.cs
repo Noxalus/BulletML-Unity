@@ -1,19 +1,22 @@
 ﻿using BulletML;
 using System.Collections.Generic;
 using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
 
 public class BulletManager : MonoBehaviour, IBulletManager
 {
     public const int MAX_BATCH_AMOUNT = 1023;
+    public const int MAX_BULLET_AMOUNT = 4096;
 
     public float Difficulty;
     public GameObject Player;
-    public int MaximumBullet;
     public Sprite BulletsTexture;
+    public BulletProfile[] BulletProfiles;
 
     private List<Bullet> _bullets = new List<Bullet>();
     // Store transform data of all bullets in arrays for optimization
     private List<Matrix4x4[]> _bulletMatricesBatches = new List<Matrix4x4[]>();
+    public Vector4[] BulletSpriteOffsets = new Vector4[MAX_BULLET_AMOUNT];
 
     private float GetDifficulty()
     {
@@ -53,7 +56,7 @@ public class BulletManager : MonoBehaviour, IBulletManager
         var bullet = new Bullet(this);
         bullet.Init();
 
-        if (_bullets.Count < MaximumBullet)
+        if (_bullets.Count < MAX_BULLET_AMOUNT)
         {
             _bullets.Add(bullet);
         }
@@ -84,6 +87,8 @@ public class BulletManager : MonoBehaviour, IBulletManager
             }
 
             _bulletMatricesBatches[batchIndex][matrixIndex] = _bullets[i].RenderData;
+            //var spriteOffset = BulletProfiles[_bullets[i].SpriteIndex].SpriteOffset;
+            //BulletSpriteOffsets[i] = new Vector4(0.25f, 0.25f, spriteOffset.x, spriteOffset.y);
         }
 
         ClearDeadBullets();

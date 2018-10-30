@@ -22,7 +22,7 @@ public class Bullet : BulletML.Bullet
         {
             return Matrix4x4.TRS(
                 Position / _bulletManager.BulletsTexture.pixelsPerUnit, 
-                Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Direction), 
+                Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Direction + 180f), 
                 new Vector3(Scale, Scale)
             );
         }
