@@ -2,10 +2,7 @@
 
 public class Bullet : BulletML.Bullet
 {
-    public Texture2D Texture;
     public Vector2 Position;
-
-    private int _currentSpriteIndex;
 
     public override float X
     {
@@ -19,11 +16,15 @@ public class Bullet : BulletML.Bullet
         set { Position.y = value; }
     }
 
-    public Matrix4x4 renderData
+    public Matrix4x4 RenderData
     {
         get
         {
-            return Matrix4x4.TRS(Position / 100f, Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Direction), new Vector3(Scale, Scale));
+            return Matrix4x4.TRS(
+                Position / _bulletManager.BulletsTexture.pixelsPerUnit, 
+                Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Direction), 
+                new Vector3(Scale, Scale)
+            );
         }
     }
 
@@ -39,7 +40,6 @@ public class Bullet : BulletML.Bullet
     public void Init()
     {
         Used = true;
-        _currentSpriteIndex = SpriteIndex;
     }
 
     public override void Update(float dt)
@@ -52,7 +52,7 @@ public class Bullet : BulletML.Bullet
 
     public bool CheckOutOfBound()
     {
-        var screenSpacePosition = Camera.main.WorldToViewportPoint(Position / 100f);
+        var screenSpacePosition = Camera.main.WorldToViewportPoint(Position / _bulletManager.BulletsTexture.pixelsPerUnit);
 
         return 
             !((screenSpacePosition.x >= 0 && screenSpacePosition.x <= 1) &&

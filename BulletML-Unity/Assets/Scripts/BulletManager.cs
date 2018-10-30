@@ -9,6 +9,7 @@ public class BulletManager : MonoBehaviour, IBulletManager
     public float Difficulty;
     public GameObject Player;
     public int MaximumBullet;
+    public Sprite BulletsTexture;
 
     private List<Bullet> _bullets = new List<Bullet>();
     // Store transform data of all bullets in arrays for optimization
@@ -82,7 +83,7 @@ public class BulletManager : MonoBehaviour, IBulletManager
                 _bulletMatricesBatches.Add(new Matrix4x4[MAX_BATCH_AMOUNT]);
             }
 
-            _bulletMatricesBatches[batchIndex][matrixIndex] = _bullets[i].renderData;
+            _bulletMatricesBatches[batchIndex][matrixIndex] = _bullets[i].RenderData;
         }
 
         ClearDeadBullets();
