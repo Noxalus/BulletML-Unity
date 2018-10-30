@@ -8,15 +8,10 @@ public class BulletManager : MonoBehaviour, IBulletManager
 
     public float Difficulty;
     public GameObject Player;
-
-    public List<GameObject> BulletPrefabs;
     public int MaximumBullet;
-    public GameObject BulletHolder;
 
     private List<Bullet> _bullets = new List<Bullet>();
-
-    private Queue<GameObject> _bulletsPools;
-
+    // Store transform data of all bullets in arrays for optimization
     private List<Matrix4x4[]> _bulletMatricesBatches = new List<Matrix4x4[]>();
 
     private float GetDifficulty()
@@ -50,41 +45,6 @@ public class BulletManager : MonoBehaviour, IBulletManager
     void Start()
     {
         GameManager.GameDifficulty = GetDifficulty;
-
-        _bulletsPools = new Queue<GameObject>();
-
-        //var circleCollider2d = BulletPrefabs[0].GetComponent<CircleCollider2D>();
-
-        //for (int i = 0; i < MaximumBullet; i++)
-        //{
-        //    var newBullet = Instantiate(BulletPrefabs[0], BulletHolder != null ? BulletHolder.transform : null);
-        //    newBullet.SetActive(false);
-        //    _bulletsPools.Enqueue(newBullet);
-        //}
-    }
-
-    public GameObject InstantiateBulletFromPool()
-    {
-        if (_bulletsPools.Count == 0)
-            return null;
-
-        var bullet = _bulletsPools.Dequeue();
-
-        bullet.SetActive(true);
-        _bulletsPools.Enqueue(bullet);
-
-        return bullet;
-    }
-
-    public GameObject InstantiateBulletPrefabs(int prefabIndex)
-    {
-        if (prefabIndex >= BulletPrefabs.Count)
-        {
-            Debug.Log("No prefab for index: " + prefabIndex);
-            return null;
-        }
-
-        return Instantiate(BulletPrefabs[prefabIndex]);
     }
 
     public IBullet CreateBullet(bool topBullet = false)
@@ -92,7 +52,7 @@ public class BulletManager : MonoBehaviour, IBulletManager
         var bullet = new Bullet(this);
         bullet.Init();
 
-        //if (_bullets.Count < MaximumBullet)
+        if (_bullets.Count < MaximumBullet)
         {
             _bullets.Add(bullet);
         }
@@ -148,13 +108,5 @@ public class BulletManager : MonoBehaviour, IBulletManager
     public void DestroyGameObject(GameObject gameObject)
     {
         Destroy(gameObject);
-    }
-
-    public GameObject GetBulletPrefab(int spriteIndex)
-    {
-        if (BulletPrefabs.Count <= spriteIndex)
-            return null;
-
-        return BulletPrefabs[spriteIndex];
     }
 }
