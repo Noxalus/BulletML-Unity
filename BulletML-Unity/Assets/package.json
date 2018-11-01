@@ -1,0 +1,9 @@
+{
+    "name": "io.noxalus.unity-bulletml",
+    "displayName": "Unity BulletML",
+    "version": "0.1.0",
+    "unity": "2018.3",
+    "description": "A set of components to parse BulletML files and execute bullet pattern in a Unity scene. \n\nTo find out more, click the \"View Documentation\" link.",
+    "keywords": ["bulletml", "bullet hell", "danmaku", "STG", "shmup", "shoot'em up"],
+    "category": "Parsers"
+}
