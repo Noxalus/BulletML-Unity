@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 046b7ce7413fad04693cae566a8cb453, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Difficulty: 0
+  Difficulty: 0.5
   Player: {fileID: 396486024}
   BulletsTexture: {fileID: 21300000, guid: 77113ab205d8a5248b4e720bb9f27c7b, type: 3}
   BulletProfiles:
@@ -737,7 +737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147aaeb6501865746ac0defcf13e9289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PatternFile: {fileID: 4900000, guid: 81b7f261c70d4624c8ac58f49c13b97d, type: 3}
+  PatternFile: {fileID: 4900000, guid: 738be7bbc35d7bd48b9fbc815e4f121a, type: 3}
   BulletManager: {fileID: 86426610}
 --- !u!1001 &1352927536
 PrefabInstance:
