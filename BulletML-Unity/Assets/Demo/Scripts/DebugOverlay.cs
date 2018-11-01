@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityBulletML.Bullets;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class DebugOverlay : MonoBehaviour
@@ -19,6 +20,6 @@ public class DebugOverlay : MonoBehaviour
         FPSCounterText.text = text;
 
         // Update bullet counter
-        BulletCounterText.text = string.Format("Bullets: " + BulletManager.BulletsCount().ToString());
+        BulletCounterText.text = string.Format("Bullets: " + BulletManager.Bullets.Count.ToString());
     }
 }

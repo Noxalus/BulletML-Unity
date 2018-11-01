@@ -414,8 +414,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1252751606}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.67, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -433,7 +433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147aaeb6501865746ac0defcf13e9289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PatternFile: {fileID: 4900000, guid: 49378c212f246ca4a93d96a7f0a59f9d, type: 3}
+  PatternFile: {fileID: 4900000, guid: 81b7f261c70d4624c8ac58f49c13b97d, type: 3}
   BulletManager: {fileID: 1359527581}
 --- !u!1 &1359527578
 GameObject:
@@ -466,8 +466,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8016645f0245b014f809bfd9f4b803c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerBox: {fileID: 396486030}
-  BulletManager: {fileID: 1359527581}
+  _playerCollider: {fileID: 396486030}
+  _bulletManager: {fileID: 1359527581}
 --- !u!114 &1359527580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,13 +494,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 046b7ce7413fad04693cae566a8cb453, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Difficulty: 0.5
-  Player: {fileID: 396486024}
-  BulletsTexture: {fileID: 21300000, guid: 77113ab205d8a5248b4e720bb9f27c7b, type: 3}
-  BulletProfiles:
+  _difficulty: 0.5
+  _player: {fileID: 396486024}
+  _maxBulletsAmount: 10000
+  _bulletsTexture: {fileID: 21300000, guid: 77113ab205d8a5248b4e720bb9f27c7b, type: 3}
+  _bulletsTextureTiling: {x: 0.25, y: 0.25}
+  _bulletProfiles:
   - {fileID: 11400000, guid: 7fabb904bb1749e44b22c5114142778a, type: 2}
   - {fileID: 11400000, guid: 7c1fabe4a26ff7e49932eb096240fff3, type: 2}
   - {fileID: 11400000, guid: 6feb6771ee831ce468f07922aa504805, type: 2}
+  - {fileID: 11400000, guid: 8cdb2f21c6bb12c42b8974b287323814, type: 2}
+  - {fileID: 11400000, guid: a4c341a1690dec84abcc9b457423035d, type: 2}
+  - {fileID: 11400000, guid: a1ee5e98b7eec6145b37231bd12d027c, type: 2}
+  - {fileID: 11400000, guid: f3574f98986ef974097cfe1ffdea68ed, type: 2}
 --- !u!4 &1359527582
 Transform:
   m_ObjectHideFlags: 0
