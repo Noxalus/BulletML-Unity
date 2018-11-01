@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BulletProfile1
   m_EditorClassIdentifier: 
   _spriteOffset: {x: 0, y: 0.75}
-  _collisionRadius: 0.5
+  _collisionRadius: 0.03
   _pivot: {x: 0.5, y: 0.5}

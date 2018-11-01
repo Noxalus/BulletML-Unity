@@ -21,7 +21,7 @@ public class Bullet : BulletML.Bullet
         get
         {
             return Matrix4x4.TRS(
-                Position / _bulletManager.BulletsTexture.pixelsPerUnit, 
+                Position / _bulletManager.PixelPerUnit(), 
                 Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Direction + 180f), 
                 Vector3.one * Scale
             );
@@ -29,6 +29,11 @@ public class Bullet : BulletML.Bullet
     }
 
     public bool Used { get; set; }
+
+    public BulletProfile Profile()
+    {
+        return _bulletManager.BulletProfiles[SpriteIndex];
+    }
 
     private BulletManager _bulletManager;
 
@@ -52,7 +57,7 @@ public class Bullet : BulletML.Bullet
 
     public bool CheckOutOfBound()
     {
-        var screenSpacePosition = Camera.main.WorldToViewportPoint(Position / _bulletManager.BulletsTexture.pixelsPerUnit);
+        var screenSpacePosition = Camera.main.WorldToViewportPoint(Position / _bulletManager.PixelPerUnit());
 
         return 
             !((screenSpacePosition.x >= 0 && screenSpacePosition.x <= 1) &&

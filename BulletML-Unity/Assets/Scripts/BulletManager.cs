@@ -25,6 +25,11 @@ public class BulletManager : MonoBehaviour, IBulletManager
         return Difficulty;
     }
 
+    public float PixelPerUnit()
+    {
+        return BulletsTexture.pixelsPerUnit;
+    }
+
     public BulletML.Vector2 PlayerPosition(IBullet targettedBullet)
     {
         if (!Player)
