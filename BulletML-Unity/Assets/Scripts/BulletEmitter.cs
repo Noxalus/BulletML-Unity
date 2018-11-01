@@ -32,6 +32,7 @@ public class BulletEmitter : MonoBehaviour
         if (_rootBullet != null)
         {
             _rootBullet.InitTopNode(_pattern.RootNode);
+            _rootBullet.Direction = transform.localRotation.eulerAngles.z;
             _rootBullet.Position = transform.position;
         }
     }
@@ -57,7 +58,6 @@ public class BulletEmitter : MonoBehaviour
         loadedPattern.ParseStream(patternFile.text, fileStream);
         //loadedPattern.ParsePattern(reader, patternFile.name);
 
-        Debug.Log("Pattern loaded: " + loadedPattern.Filename);
         Debug.Log("Pattern loaded: " + loadedPattern.Filename);
         Debug.Log("Pattern loaded root node: " + loadedPattern.RootNode.Label);
 

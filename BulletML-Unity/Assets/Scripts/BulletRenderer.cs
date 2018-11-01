@@ -10,8 +10,8 @@ public class BulletRenderer : MonoBehaviour
 
     private Mesh _mesh;
 
-    Vector4[] _spriteOffsets = new Vector4[4096];
-    Vector4[] _colors = new Vector4[4096];
+    const int MAX_SIZE = 10;
+    readonly Vector4[] _spriteOffsets = new Vector4[MAX_SIZE];
     MaterialPropertyBlock _materialPropertyBlock;
 
     public void Awake()
@@ -20,12 +20,6 @@ public class BulletRenderer : MonoBehaviour
         var pivot = (Vector2.one / 2f) * size;
 
         _mesh = MeshUtils.GenerateQuad(size, pivot);
-
-        for (int i = 0; i < 4096; i++)
-        {
-            _spriteOffsets[i] = new Vector4(0.25f, 0.25f, 0.25f, 0.75f);
-            _colors[i] = new Vector4(1f, 1f, 0f, 1f);
-        }
 
         _materialPropertyBlock = new MaterialPropertyBlock();
     }
@@ -41,11 +35,13 @@ public class BulletRenderer : MonoBehaviour
         if (BulletManager.Bullets.Count <= 0)
             return;
 
-        _materialPropertyBlock.SetVectorArray("_MainTex_ST", _spriteOffsets);//BulletManager.BulletSpriteOffsets);
-        _materialPropertyBlock.SetVectorArray("_Color", _colors);
+        //_colors[0] = new Vector4(Random.value, Random.value, Random.value, 1f);
+
+        //_materialPropertyBlock.SetVectorArray("_MainTex_ST", _spriteOffsets); //BulletManager.BulletSpriteOffsets);
+        _materialPropertyBlock.SetVectorArray("_Color", BulletManager.BulletColors);
 
         // Draw each batch
-        foreach (var batch in BulletManager.BulletMatrices)
+        foreach (var batch in BulletManager.BulletTransformMatrices)
             Graphics.DrawMeshInstanced(_mesh, 0, Material, batch, batch.Length, _materialPropertyBlock);
     }
 }

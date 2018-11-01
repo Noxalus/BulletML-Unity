@@ -16,14 +16,14 @@ public class Bullet : BulletML.Bullet
         set { Position.y = value; }
     }
 
-    public Matrix4x4 RenderData
+    public Matrix4x4 TransformMatrix
     {
         get
         {
             return Matrix4x4.TRS(
                 Position / _bulletManager.BulletsTexture.pixelsPerUnit, 
                 Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Direction + 180f), 
-                new Vector3(Scale, Scale)
+                Vector3.one * Scale
             );
         }
     }
