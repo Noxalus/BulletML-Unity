@@ -23,8 +23,8 @@ Shader "Sprites/Instanced"
             struct appdata
             {
                 float4 vertex : POSITION;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
                 float2 uv : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct v2f
@@ -35,13 +35,13 @@ Shader "Sprites/Instanced"
             };
 
             sampler2D _MainTex;
-            float4 _MainTex_ST;
 
             // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
             // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
             // #pragma instancing_options assumeuniformscaling
             UNITY_INSTANCING_BUFFER_START(Props)
                 UNITY_DEFINE_INSTANCED_PROP(fixed4, _Color)
+                UNITY_DEFINE_INSTANCED_PROP(float4, _MainTex_ST)
             UNITY_INSTANCING_BUFFER_END(Props)
 
             v2f vert (appdata v)
@@ -52,7 +52,9 @@ Shader "Sprites/Instanced"
                 UNITY_TRANSFER_INSTANCE_ID(v, o);
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                // o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+
+                o.uv = (v.uv * UNITY_ACCESS_INSTANCED_PROP(Props, _MainTex_ST).xy) + UNITY_ACCESS_INSTANCED_PROP(Props, _MainTex_ST).zw;
 
                 return o;
             }

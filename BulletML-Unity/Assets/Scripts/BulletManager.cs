@@ -6,7 +6,7 @@ using Vector2 = UnityEngine.Vector2;
 public class BulletManager : MonoBehaviour, IBulletManager
 {
     public const int MAX_BATCH_AMOUNT = 1023;
-    public const int MAX_BULLET_AMOUNT = 1024;
+    public const int MAX_BULLET_AMOUNT = 10000;
 
     public float Difficulty;
     public GameObject Player;
@@ -16,8 +16,9 @@ public class BulletManager : MonoBehaviour, IBulletManager
     private List<Bullet> _bullets = new List<Bullet>(MAX_BULLET_AMOUNT);
     // Store transform data of all bullets in arrays for optimization
     private List<Matrix4x4[]> _bulletMatricesBatches = new List<Matrix4x4[]>();
-    public Vector4[] BulletSpriteOffsets = new Vector4[MAX_BULLET_AMOUNT];
-    public Vector4[] BulletColors = new Vector4[MAX_BULLET_AMOUNT];
+    public List<Vector4[]> _bulletSpriteOffsetsBatches = new List<Vector4[]>();
+    public List<Vector4[]> _bulletColorsBatches = new List<Vector4[]>();
+
 
     private float GetDifficulty()
     {
@@ -37,10 +38,9 @@ public class BulletManager : MonoBehaviour, IBulletManager
         get { return _bullets; }
     }
 
-    public List<Matrix4x4[]> BulletTransformMatrices
-    {
-        get { return _bulletMatricesBatches; }
-    }
+    public List<Matrix4x4[]> BulletTransformMatrices => _bulletMatricesBatches;
+    public List<Vector4[]> BulletSpriteOffsetsBatches => _bulletSpriteOffsetsBatches;
+    public List<Vector4[]> BulletColorsBatches => _bulletColorsBatches;
 
     public int BulletsCount()
     {
@@ -82,17 +82,19 @@ public class BulletManager : MonoBehaviour, IBulletManager
             currentBullet.Update(Time.fixedDeltaTime);
 
             int batchIndex = i / MAX_BATCH_AMOUNT;
-            int matrixIndex = i % MAX_BATCH_AMOUNT;
+            int elementIndex = i % MAX_BATCH_AMOUNT;
 
             if (_bulletMatricesBatches.Count <= batchIndex)
             {
                 _bulletMatricesBatches.Add(new Matrix4x4[MAX_BATCH_AMOUNT]);
+                _bulletSpriteOffsetsBatches.Add(new Vector4[MAX_BATCH_AMOUNT]);
+                _bulletColorsBatches.Add(new Vector4[MAX_BATCH_AMOUNT]);
             }
 
-            _bulletMatricesBatches[batchIndex][matrixIndex] = currentBullet.TransformMatrix;
-            //var spriteOffset = BulletProfiles[_bullets[i].SpriteIndex].SpriteOffset;
-            BulletSpriteOffsets[i] = GetTextureOffset(currentBullet.SpriteIndex);
-            BulletColors[i] = new Vector4(
+            _bulletMatricesBatches[batchIndex][elementIndex] = currentBullet.TransformMatrix;
+            var textureOffset = GetTextureOffset(currentBullet.SpriteIndex);
+            _bulletSpriteOffsetsBatches[batchIndex][elementIndex] = textureOffset;
+            _bulletColorsBatches[batchIndex][elementIndex] = new Vector4(
                 currentBullet.Color.R / 255f,
                 currentBullet.Color.G / 255f,
                 currentBullet.Color.B / 255f,
@@ -112,8 +114,8 @@ public class BulletManager : MonoBehaviour, IBulletManager
         int textureColumnIndex = spriteIndex % elementPerLine;
         int textureLineIndex = spriteIndex / elementPerLine;
 
-        textureOffset.x = textureColumnIndex * tiling;
-        textureOffset.y = 1f - (textureLineIndex * tiling);
+        textureOffset.z = textureColumnIndex * tiling;
+        textureOffset.w = (1f - tiling) - (textureLineIndex * tiling);
 
         return textureOffset;
     }
