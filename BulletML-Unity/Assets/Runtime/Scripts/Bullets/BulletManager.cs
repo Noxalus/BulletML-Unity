@@ -65,7 +65,7 @@ namespace UnityBulletML.Bullets
 
         public BulletML.Vector2 PlayerPosition(IBullet targettedBullet)
         {
-            return new BulletML.Vector2(_player.transform.position.x, _player.transform.position.y);
+            return new BulletML.Vector2(_player.transform.position.x * PixelPerUnit, _player.transform.position.y * PixelPerUnit);
         }
 
         public IBullet CreateBullet(bool topBullet = false)
