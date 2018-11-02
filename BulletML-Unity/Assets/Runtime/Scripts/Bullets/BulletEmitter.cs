@@ -13,15 +13,26 @@ namespace UnityBulletML.Bullets
 
         private BulletPattern _pattern;
         private Bullet _rootBullet;
+        // Cache transform
+        private Transform _transform = null;
 
         void Start()
         {
             if (PatternFile == null)
                 throw new System.Exception("No pattern assigned to the emitter.");
 
-            ParsePattern();
+            _transform = transform;
 
+            ParsePattern();
             AddBullet();
+        }
+
+        void Update()
+        {
+            if (_transform != null && transform.hasChanged)
+            {
+                _rootBullet.SetPosition(transform.position);
+            }
         }
 
         private void AddBullet(bool clear = false)
