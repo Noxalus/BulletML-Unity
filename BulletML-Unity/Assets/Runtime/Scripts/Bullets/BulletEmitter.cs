@@ -1,4 +1,5 @@
 ﻿using BulletML;
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -10,8 +11,8 @@ namespace UnityBulletML.Bullets
     {
         #region Serialize fields
 
-        [SerializeField] private TextAsset _patternFile;
-        [SerializeField] private BulletManager _bulletManager;
+        [SerializeField] private TextAsset _patternFile = null;
+        [SerializeField] private BulletManager _bulletManager = null;
 
         #endregion
 
@@ -34,12 +35,13 @@ namespace UnityBulletML.Bullets
             if (PatternFile == null)
                 throw new System.Exception("No pattern assigned to the emitter.");
 
-            ParsePattern();
+            LoadPattern();
             AddBullet();
         }
 
         void Update()
         {
+            // Make sure the pattern follows its related GameObject position
             if (transform.hasChanged)
             {
                 _rootBullet.SetPosition(transform.position);
@@ -61,28 +63,25 @@ namespace UnityBulletML.Bullets
             }
         }
 
-        public void ParsePattern()
+        public void SetPattern(TextAsset patternFile)
         {
-            _pattern = LoadPattern(PatternFile);
+            _patternFile = patternFile;
+            LoadPattern();
         }
 
-        public static BulletPattern LoadPattern(TextAsset patternFile)
+        public void LoadPattern()
         {
-            BulletPattern loadedPattern = null;
-
-            XmlTextReader reader = new XmlTextReader(new StringReader(patternFile.text));
+            XmlTextReader reader = new XmlTextReader(new StringReader(_patternFile.text));
             reader.Normalization = false;
             reader.XmlResolver = null;
 
-            var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(patternFile.text ?? ""));
+            var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(_patternFile.text ?? ""));
 
-            loadedPattern = new BulletPattern();
-            loadedPattern.ParseStream(patternFile.name, fileStream);
+            _pattern = new BulletPattern();
+            _pattern.ParseStream(_patternFile.name, fileStream);
             //loadedPattern.ParsePattern(reader, patternFile.name);
 
-            Debug.Log("Pattern loaded: " + loadedPattern.Filename);
-
-            return loadedPattern;
+            Debug.Log("Pattern loaded: " + _pattern.Filename);
         }
     }
 }
