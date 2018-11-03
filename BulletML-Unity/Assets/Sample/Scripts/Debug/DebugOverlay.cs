@@ -1,4 +1,5 @@
-﻿using UnityBulletML.Bullets;
+﻿using System;
+using UnityBulletML.Bullets;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ public class DebugOverlay : MonoBehaviour
     public Text FPSCounterText;
     public Text BulletCounterText;
     public BulletManager BulletManager;
+    public CanvasGroup CanvasGroup;
 
     private float _deltaTime = 0.0f;
 
@@ -21,5 +23,10 @@ public class DebugOverlay : MonoBehaviour
 
         // Update bullet counter
         BulletCounterText.text = string.Format("Bullets: " + BulletManager.Bullets.Count.ToString());
+    }
+
+    public void Show(bool value)
+    {
+        CanvasGroup.alpha = value ? 1 : 0;
     }
 }
