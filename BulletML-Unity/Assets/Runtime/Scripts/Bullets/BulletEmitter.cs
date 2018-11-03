@@ -35,7 +35,7 @@ namespace UnityBulletML.Bullets
             }
         }
 
-        private void AddBullet(bool clear = false)
+        public void AddBullet(bool clear = false)
         {
             if (clear)
                 BulletManager.Clear();
