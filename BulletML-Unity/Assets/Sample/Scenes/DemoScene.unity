@@ -1578,6 +1578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c45d17dd8033145ba3b5357807eaeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BulletManager: {fileID: 1359527581}
   BulletEmitter: {fileID: 1252751608}
   CurrentPatternText: {fileID: 1925366222}
   _patternFolder: Assets/Sample/Resources/Patterns
