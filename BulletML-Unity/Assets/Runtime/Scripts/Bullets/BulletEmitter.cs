@@ -8,20 +8,31 @@ namespace UnityBulletML.Bullets
 {
     public class BulletEmitter : MonoBehaviour
     {
-        public TextAsset PatternFile;
-        public BulletManager BulletManager;
+        #region Serialize fields
+
+        [SerializeField] private TextAsset _patternFile;
+        [SerializeField] private BulletManager _bulletManager;
+
+        #endregion
+
+        #region Properties
 
         private BulletPattern _pattern;
         private Bullet _rootBullet;
-        // Cache transform
-        private Transform _transform = null;
+        
+        #endregion
+
+        #region Getters
+
+        public TextAsset PatternFile => _patternFile;
+        public BulletManager BulletManager => _bulletManager;
+
+        #endregion
 
         void Start()
         {
             if (PatternFile == null)
                 throw new System.Exception("No pattern assigned to the emitter.");
-
-            _transform = transform;
 
             ParsePattern();
             AddBullet();
@@ -29,7 +40,7 @@ namespace UnityBulletML.Bullets
 
         void Update()
         {
-            if (_transform != null && transform.hasChanged)
+            if (transform.hasChanged)
             {
                 _rootBullet.SetPosition(transform.position);
             }
@@ -38,9 +49,9 @@ namespace UnityBulletML.Bullets
         public void AddBullet(bool clear = false)
         {
             if (clear)
-                BulletManager.Clear();
+                _bulletManager.Clear();
 
-            _rootBullet = (Bullet)BulletManager.CreateBullet(true);
+            _rootBullet = (Bullet)_bulletManager.CreateBullet(true);
 
             if (_rootBullet != null)
             {
