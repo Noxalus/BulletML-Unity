@@ -61,7 +61,7 @@ public class DebugManager : MonoBehaviour
             _currentPatternIndex = 0;
 
         BulletManager.Clear();
-        BulletEmitter.SetPattern(_patternFiles[_currentPatternIndex]);
+        BulletEmitter.SetPatternFile(_patternFiles[_currentPatternIndex]);
 
         UpdateCurrentPatternText();
     }
@@ -74,7 +74,7 @@ public class DebugManager : MonoBehaviour
             _currentPatternIndex = _patternFiles.Count - 1;
 
         BulletManager.Clear();
-        BulletEmitter.SetPattern(_patternFiles[_currentPatternIndex]);
+        BulletEmitter.SetPatternFile(_patternFiles[_currentPatternIndex]);
         UpdateCurrentPatternText();
     }
 }

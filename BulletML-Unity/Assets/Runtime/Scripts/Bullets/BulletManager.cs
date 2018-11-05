@@ -1,5 +1,8 @@
 ﻿using BulletML;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Xml;
 using UnityBulletML.Bullets.Data;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
@@ -15,6 +18,9 @@ namespace UnityBulletML.Bullets
 
         [Header("Gameplay")]
         [SerializeField] private float _difficulty = 0.5f;
+
+        [Header("Pattern files")]
+        [SerializeField] private string _patternFilesFolder = "";
 
         [Header("References")]
         [SerializeField] private GameObject _player = null;
@@ -35,6 +41,7 @@ namespace UnityBulletML.Bullets
         private List<Vector4[]> _bulletColorsBatches = new List<Vector4[]>();
 
         private List<Bullet> _bullets;
+        private Dictionary<string, BulletPattern> _bulletPatterns = new Dictionary<string, BulletPattern>();
 
         #endregion
 
@@ -59,6 +66,47 @@ namespace UnityBulletML.Bullets
         {
             GameManager.GameDifficulty = GetDifficulty;
             _bullets = new List<Bullet>(_maxBulletsAmount);
+        }
+
+        public void LoadPatterns()
+        {
+            var directoryInfo = new DirectoryInfo(_patternFilesFolder);
+            var filesInfo = directoryInfo.GetFiles();
+
+            var resourcesFolder = "Resources/";
+            var pathFromResourcesFolder = _patternFilesFolder.Substring(_patternFilesFolder.IndexOf(resourcesFolder) + resourcesFolder.Length);
+
+            foreach (var fileInfo in filesInfo)
+            {
+                var fileExtension = Path.GetExtension(fileInfo.Name);
+
+                if (fileExtension.Equals(".xml"))
+                {
+                    TextAsset patternFile = Resources.Load<TextAsset>(pathFromResourcesFolder + "/" + Path.GetFileNameWithoutExtension(fileInfo.Name));
+
+                    XmlTextReader reader = new XmlTextReader(new StringReader(patternFile.text))
+                    {
+                        Normalization = false,
+                        XmlResolver = null
+                    };
+
+                    var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(patternFile.text ?? ""));
+
+                    var pattern = new BulletPattern();
+                    pattern.ParseStream(patternFile.name, fileStream);
+
+                    _bulletPatterns.Add(patternFile.name, pattern);
+                    Debug.Log("Found: " + fileInfo);
+                }
+            }
+        }
+
+        public BulletPattern GetPattern(string patternName)
+        {
+            if (!_bulletPatterns.ContainsKey(patternName))
+                throw new System.Exception("No pattern found for this name: " + patternName);
+
+            return _bulletPatterns[patternName];
         }
 
         #region IBulletManager implementation
