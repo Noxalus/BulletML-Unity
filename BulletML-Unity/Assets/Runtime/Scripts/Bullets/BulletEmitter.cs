@@ -1,5 +1,4 @@
 ﻿using BulletML;
-using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -20,29 +19,40 @@ namespace UnityBulletML.Bullets
 
         private BulletPattern _pattern;
         private Bullet _rootBullet;
-        
+
         #endregion
 
-        #region Getters
+        #region Getters/Setters
 
         public TextAsset PatternFile => _patternFile;
-        public BulletManager BulletManager => _bulletManager;
+
+        public BulletManager BulletManager
+        {
+            get
+            {
+                return _bulletManager;
+            }
+            set
+            {
+                _bulletManager = value;
+            }
+        }
 
         #endregion
 
         void Start()
         {
-            if (PatternFile == null)
-                throw new System.Exception("No pattern assigned to the emitter.");
-
-            LoadPattern();
-            AddBullet();
+            if (PatternFile != null)
+            {
+                LoadPattern();
+                AddBullet();
+            }
         }
 
         void Update()
         {
             // Make sure the pattern follows its related GameObject position
-            if (transform.hasChanged)
+            if (_rootBullet != null && transform.hasChanged)
             {
                 _rootBullet.SetPosition(transform.position);
             }
@@ -52,6 +62,9 @@ namespace UnityBulletML.Bullets
         {
             if (clear)
                 _bulletManager.Clear();
+
+            if (_pattern == null)
+                throw new System.Exception("No pattern assigned to the emitter.");
 
             _rootBullet = (Bullet)_bulletManager.CreateBullet(true);
 
@@ -63,17 +76,24 @@ namespace UnityBulletML.Bullets
             }
         }
 
-        public void SetPattern(TextAsset patternFile)
+        public void SetPatternFile(TextAsset patternFile)
         {
             _patternFile = patternFile;
             LoadPattern();
         }
 
+        public void SetPattern(BulletPattern pattern)
+        {
+            _pattern = pattern;
+        }
+
         public void LoadPattern()
         {
-            XmlTextReader reader = new XmlTextReader(new StringReader(_patternFile.text));
-            reader.Normalization = false;
-            reader.XmlResolver = null;
+            XmlTextReader reader = new XmlTextReader(new StringReader(_patternFile.text))
+            {
+                Normalization = false,
+                XmlResolver = null
+            };
 
             var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(_patternFile.text ?? ""));
 
