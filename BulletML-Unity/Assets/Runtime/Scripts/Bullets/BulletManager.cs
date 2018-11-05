@@ -71,7 +71,7 @@ namespace UnityBulletML.Bullets
         public void LoadPatterns()
         {
             var directoryInfo = new DirectoryInfo(_patternFilesFolder);
-            var filesInfo = directoryInfo.GetFiles();
+            var filesInfo = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories);
 
             var resourcesFolder = "Resources/";
             var pathFromResourcesFolder = _patternFilesFolder.Substring(_patternFilesFolder.IndexOf(resourcesFolder) + resourcesFolder.Length);
@@ -82,7 +82,10 @@ namespace UnityBulletML.Bullets
 
                 if (fileExtension.Equals(".xml"))
                 {
-                    TextAsset patternFile = Resources.Load<TextAsset>(pathFromResourcesFolder + "/" + Path.GetFileNameWithoutExtension(fileInfo.Name));
+                    var subFolder = fileInfo.DirectoryName.Substring(fileInfo.DirectoryName.IndexOf(pathFromResourcesFolder) + pathFromResourcesFolder.Length);
+                    subFolder += Path.DirectorySeparatorChar;
+
+                    TextAsset patternFile = Resources.Load<TextAsset>(pathFromResourcesFolder + subFolder + Path.GetFileNameWithoutExtension(fileInfo.Name));
 
                     XmlTextReader reader = new XmlTextReader(new StringReader(patternFile.text))
                     {
