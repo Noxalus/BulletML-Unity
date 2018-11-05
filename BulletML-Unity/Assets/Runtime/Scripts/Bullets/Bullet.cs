@@ -1,4 +1,5 @@
-﻿using UnityBulletML.Bullets.Data;
+﻿using System;
+using UnityBulletML.Bullets.Data;
 using UnityEngine;
 
 namespace UnityBulletML.Bullets
@@ -9,6 +10,7 @@ namespace UnityBulletML.Bullets
 
         private Vector2 _position;
         private BulletManager _bulletManager;
+        private bool _topBullet;
 
         #endregion
 
@@ -49,9 +51,10 @@ namespace UnityBulletML.Bullets
             _bulletManager = bulletManager as BulletManager;
         }
 
-        public void Init()
+        public void Init(bool topBullet)
         {
             Used = true;
+            _topBullet = topBullet;
         }
 
         // X/Y setters should only be used by the BulletML library as
@@ -88,6 +91,11 @@ namespace UnityBulletML.Bullets
             return
                 !((screenSpacePosition.x >= 0 && screenSpacePosition.x <= 1) &&
                 (screenSpacePosition.y >= 0 && screenSpacePosition.y <= 1));
+        }
+
+        public bool IsTopBullet()
+        {
+            return _topBullet;
         }
     }
 }

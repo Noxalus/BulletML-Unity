@@ -122,7 +122,7 @@ namespace UnityBulletML.Bullets
                 return null;
 
             var bullet = new Bullet(this);
-            bullet.Init();
+            bullet.Init(topBullet);
             _bullets.Add(bullet);
 
             return bullet;
@@ -145,6 +145,9 @@ namespace UnityBulletML.Bullets
                 Bullet currentBullet = _bullets[i];
 
                 currentBullet.Update(Time.fixedDeltaTime);
+
+                if (currentBullet.IsTopBullet())
+                    continue;
 
                 int batchIndex = i / MAX_BATCH_AMOUNT;
                 int elementIndex = i % MAX_BATCH_AMOUNT;
