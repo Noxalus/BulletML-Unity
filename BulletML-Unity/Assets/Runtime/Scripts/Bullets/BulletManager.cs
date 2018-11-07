@@ -149,9 +149,6 @@ namespace UnityBulletML.Bullets
 
                 currentBullet.Update(Time.fixedDeltaTime);
 
-                if (currentBullet.IsTopBullet())
-                    continue;
-
                 int batchIndex = i / MAX_BATCH_AMOUNT;
                 int elementIndex = i % MAX_BATCH_AMOUNT;
 
@@ -163,28 +160,35 @@ namespace UnityBulletML.Bullets
                     _bulletColorsBatches.Add(new Vector4[MAX_BATCH_AMOUNT]);
                 }
 
-                // Update current bullet's data arrays
-                _bulletMatricesBatches[batchIndex][elementIndex] = currentBullet.TransformMatrix;
-                _bulletSpriteOffsetsBatches[batchIndex][elementIndex] = GetTextureOffset(currentBullet.SpriteIndex);
-                _bulletColorsBatches[batchIndex][elementIndex] = new Vector4(
-                    currentBullet.Color.R / 255f,
-                    currentBullet.Color.G / 255f,
-                    currentBullet.Color.B / 255f,
-                    currentBullet.Color.A / 255f
-                );
-            }
-
-            ClearDeadBullets();
-        }
-
-        private void ClearDeadBullets()
-        {
-            for (int i = 0; i < _bullets.Count; i++)
-            {
-                if (!_bullets[i].Used)
+                if (!currentBullet.Used)
                 {
                     _bullets.Remove(_bullets[i]);
+
+                    //_bulletMatricesBatches.Clear();
+                    //_bulletSpriteOffsetsBatches.Clear();
+                    //_bulletColorsBatches.Clear();
+
+                    _bulletMatricesBatches[batchIndex][i] = Matrix4x4.zero;
+                    _bulletSpriteOffsetsBatches[batchIndex][i] = Vector4.zero;
+                    _bulletColorsBatches[batchIndex][i] = Vector4.zero;
+
                     i--;
+                }
+                else
+                {
+                    // We don't want to render top bullets
+                    if (!currentBullet.IsTopBullet())
+                    {
+                        // Update current bullet's data arrays
+                        _bulletMatricesBatches[batchIndex][elementIndex] = currentBullet.TransformMatrix;
+                        _bulletSpriteOffsetsBatches[batchIndex][elementIndex] = GetTextureOffset(currentBullet.SpriteIndex);
+                        _bulletColorsBatches[batchIndex][elementIndex] = new Vector4(
+                            currentBullet.Color.R / 255f,
+                            currentBullet.Color.G / 255f,
+                            currentBullet.Color.B / 255f,
+                            currentBullet.Color.A / 255f
+                        );
+                    }
                 }
             }
         }
