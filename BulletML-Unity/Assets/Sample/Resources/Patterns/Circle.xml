@@ -23,7 +23,7 @@
                   <speed>0</speed>
                   <term>50</term>
                 </changeSpeed>
-                <wait>500</wait>
+                <wait>100</wait>
                 <changeSpeed>
                   <speed>1</speed>
                   <term>0</term>

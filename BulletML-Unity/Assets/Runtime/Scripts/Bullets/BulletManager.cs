@@ -163,15 +163,6 @@ namespace UnityBulletML.Bullets
                 if (!currentBullet.Used)
                 {
                     _bullets.Remove(_bullets[i]);
-
-                    //_bulletMatricesBatches.Clear();
-                    //_bulletSpriteOffsetsBatches.Clear();
-                    //_bulletColorsBatches.Clear();
-
-                    _bulletMatricesBatches[batchIndex][i] = Matrix4x4.zero;
-                    _bulletSpriteOffsetsBatches[batchIndex][i] = Vector4.zero;
-                    _bulletColorsBatches[batchIndex][i] = Vector4.zero;
-
                     i--;
                 }
                 else
