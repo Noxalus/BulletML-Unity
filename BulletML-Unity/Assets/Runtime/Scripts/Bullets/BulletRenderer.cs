@@ -16,7 +16,7 @@ namespace UnityBulletML.Bullets
         public void Start()
         {
             var size = _bulletSize;
-            var pivot = Vector2.one / 2f;
+            var pivot = Vector2.one * (_bulletSize / 2f);
 
             _mesh = MeshUtils.GenerateQuad(size, pivot);
             _materialPropertyBlock = new MaterialPropertyBlock();
