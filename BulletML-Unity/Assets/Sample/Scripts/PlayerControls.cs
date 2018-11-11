@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UnityBulletML
+namespace UnityBulletMLSample
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerControls : MonoBehaviour

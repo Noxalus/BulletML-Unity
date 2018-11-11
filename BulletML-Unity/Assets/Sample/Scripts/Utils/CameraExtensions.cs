@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UnityBulletML
+namespace UnityBulletMLSample
 {
     public static class CameraExtensions
     {

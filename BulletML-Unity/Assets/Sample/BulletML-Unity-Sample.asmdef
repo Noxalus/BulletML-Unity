@@ -1,0 +1,14 @@
+{
+    "name": "BulletML-Unity-Sample",
+    "references": [
+        "BulletML-Unity"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UnityBulletML
+namespace UnityBulletMLSample
 {
     public class DebugOverlay : MonoBehaviour
     {

@@ -4,7 +4,7 @@ using UnityBulletML.Bullets;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UnityBulletML
+namespace UnityBulletMLSample
 {
     public class DebugManager : MonoBehaviour
     {
