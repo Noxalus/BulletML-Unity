@@ -1,11 +1,21 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace UnityBulletML.Bullets
 {
+    public class OnCollisionEvent : UnityEvent<Bullet> { };
+
     public class BulletPhysics : MonoBehaviour
     {
+        [Header("References")]
         [SerializeField] private CircleCollider2D _playerCollider = null;
         [SerializeField] private BulletManager _bulletManager = null;
+
+        [Header("Parameters")]
+        [SerializeField] private bool _destroyBulletOnCollision = true;
+
+        [Header("Events")]
+        [SerializeField] private OnCollisionEvent _onCollision = new OnCollisionEvent();
 
         // Cache the player transform
         private Transform _playerTransform;
@@ -33,7 +43,10 @@ namespace UnityBulletML.Bullets
 
                 if ((dx * dx) + (dy * dy) < radius * radius)
                 {
-                    currentBullet.Used = false;
+                    if (_destroyBulletOnCollision)
+                        currentBullet.Used = false;
+
+                    _onCollision.Invoke(currentBullet);
                 }
             }
         }
