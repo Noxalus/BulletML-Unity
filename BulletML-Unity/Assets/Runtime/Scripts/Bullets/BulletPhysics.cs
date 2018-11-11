@@ -40,6 +40,13 @@ namespace UnityBulletML.Bullets
             for (int i = 0; i < _bulletManager.Bullets.Count; i++)
             {
                 var currentBullet = _bulletManager.Bullets[i];
+
+                // Ignore top bullets
+                if (currentBullet.IsTopBullet() || !currentBullet.Used)
+                {
+                    continue;
+                }
+
                 var bulletPosition = new Vector3(currentBullet.Position.x, currentBullet.Position.y, 0f) / _bulletManager.PixelPerUnit;
 
                 var dx = (currentBullet.Position.x / _bulletManager.PixelPerUnit) - _playerTransform.position.x;
