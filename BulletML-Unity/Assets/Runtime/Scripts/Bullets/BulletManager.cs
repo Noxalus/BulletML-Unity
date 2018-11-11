@@ -38,7 +38,7 @@ namespace UnityBulletML.Bullets
 
         #endregion
 
-        #region Properties
+        #region Private fields
 
         // Store bullets data in arrays to use DrawMeshInstanced method for rendering optimization
         private List<Matrix4x4[]> _bulletMatricesBatches = new List<Matrix4x4[]>();
@@ -49,13 +49,11 @@ namespace UnityBulletML.Bullets
         private Queue<Bullet> _unusedBullets = new Queue<Bullet>();
         private Dictionary<string, BulletPattern> _bulletPatterns = new Dictionary<string, BulletPattern>();
 
-        public float BulletInitialSize => _bulletInitialSize;
-        public Vector2 BulletsWidthBoundary => _bulletsWidthBoundary;
-        public Vector2 BulletsHeightBoundary => _bulletsHeightBoundary;
+        private bool _pause;
 
         #endregion
 
-        #region Getters
+        #region Properties
 
         public List<Matrix4x4[]> BulletTransformMatrices => _bulletMatricesBatches;
         public List<Vector4[]> BulletSpriteOffsetsBatches => _bulletSpriteOffsetsBatches;
@@ -65,104 +63,34 @@ namespace UnityBulletML.Bullets
         public List<Bullet> Bullets => _bullets;
         public BulletProfile[] BulletProfiles => _bulletProfiles;
 
-        #endregion
+        public float BulletInitialSize => _bulletInitialSize;
+        public Vector2 BulletsWidthBoundary => _bulletsWidthBoundary;
+        public Vector2 BulletsHeightBoundary => _bulletsHeightBoundary;
 
-        private float GetDifficulty()
-        {
-            return _difficulty;
-        }
+        #endregion
 
         void Awake()
         {
             BulletML.GameManager.GameDifficulty = GetDifficulty;
             _bullets = new List<Bullet>(_maxBulletsAmount);
+            _pause = false;
         }
 
-        public void LoadPatterns()
+        public void Pause()
         {
-            var directoryInfo = new DirectoryInfo(_patternFilesFolder);
-            var filesInfo = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories);
-
-            var resourcesFolder = "Resources/";
-            var pathFromResourcesFolder = _patternFilesFolder.Substring(_patternFilesFolder.IndexOf(resourcesFolder) + resourcesFolder.Length);
-
-            foreach (var fileInfo in filesInfo)
-            {
-                var fileExtension = Path.GetExtension(fileInfo.Name);
-
-                if (fileExtension.Equals(".xml"))
-                {
-                    var subFolder = fileInfo.DirectoryName.Substring(fileInfo.DirectoryName.IndexOf(pathFromResourcesFolder) + pathFromResourcesFolder.Length);
-                    subFolder += Path.DirectorySeparatorChar;
-
-                    TextAsset patternFile = Resources.Load<TextAsset>(pathFromResourcesFolder + subFolder + Path.GetFileNameWithoutExtension(fileInfo.Name));
-
-                    XmlTextReader reader = new XmlTextReader(new StringReader(patternFile.text))
-                    {
-                        Normalization = false,
-                        XmlResolver = null
-                    };
-
-                    var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(patternFile.text ?? ""));
-
-                    var pattern = new BulletPattern();
-                    pattern.ParseStream(patternFile.name, fileStream);
-
-                    _bulletPatterns.Add(patternFile.name, pattern);
-                    Debug.Log("Found: " + fileInfo);
-                }
-            }
+            _pause = true;
         }
 
-        public BulletPattern GetPattern(string patternName)
+        public void Resume()
         {
-            if (!_bulletPatterns.ContainsKey(patternName))
-                throw new System.Exception("No pattern found for this name: " + patternName);
-
-            return _bulletPatterns[patternName];
+            _pause = false;
         }
-
-        #region IBulletManager implementation
-
-        public BulletML.Vector2 PlayerPosition(IBullet targettedBullet)
-        {
-            return new BulletML.Vector2(_playerTransform.position.x * PixelPerUnit, _playerTransform.position.y * PixelPerUnit);
-        }
-
-        public IBullet CreateBullet(bool topBullet = false)
-        {
-            if (_bullets.Count >= _maxBulletsAmount)
-                return null;
-
-            Bullet bullet;
-
-            if (_unusedBullets.Count > 0)
-            {
-                bullet = _unusedBullets.Dequeue();
-            }
-            else
-            {
-                bullet = new Bullet(this);
-                _bullets.Add(bullet);
-            }
-
-            bullet.Init(topBullet);
-
-            return bullet;
-        }
-
-        public void RemoveBullet(IBullet deadBullet)
-        {
-            var bullet = deadBullet as Bullet;
-
-            if (bullet != null)
-                bullet.Used = false;
-        }
-
-        #endregion
 
         public void FixedUpdate()
         {
+            if (_pause)
+                return;
+
             var _bulletsToRemove = new List<Bullet>();
 
             for (int i = 0; i < _bullets.Count; i++)
@@ -221,6 +149,98 @@ namespace UnityBulletML.Bullets
             _bulletSpriteOffsetsBatches.Clear();
             _bulletColorsBatches.Clear();
         }
+
+        #region IBulletManager
+
+        private float GetDifficulty()
+        {
+            return _difficulty;
+        }
+
+        public BulletML.Vector2 PlayerPosition(IBullet targettedBullet)
+        {
+            return new BulletML.Vector2(_playerTransform.position.x * PixelPerUnit, _playerTransform.position.y * PixelPerUnit);
+        }
+
+        public IBullet CreateBullet(bool topBullet = false)
+        {
+            if (_bullets.Count >= _maxBulletsAmount)
+                return null;
+
+            Bullet bullet;
+
+            if (_unusedBullets.Count > 0)
+            {
+                bullet = _unusedBullets.Dequeue();
+            }
+            else
+            {
+                bullet = new Bullet(this);
+                _bullets.Add(bullet);
+            }
+
+            bullet.Init(topBullet);
+
+            return bullet;
+        }
+
+        public void RemoveBullet(IBullet deadBullet)
+        {
+            var bullet = deadBullet as Bullet;
+
+            if (bullet != null)
+                bullet.Used = false;
+        }
+
+        #endregion
+
+        #region Pattern files
+
+        public void LoadPatterns()
+        {
+            var directoryInfo = new DirectoryInfo(_patternFilesFolder);
+            var filesInfo = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories);
+
+            var resourcesFolder = "Resources/";
+            var pathFromResourcesFolder = _patternFilesFolder.Substring(_patternFilesFolder.IndexOf(resourcesFolder) + resourcesFolder.Length);
+
+            foreach (var fileInfo in filesInfo)
+            {
+                var fileExtension = Path.GetExtension(fileInfo.Name);
+
+                if (fileExtension.Equals(".xml"))
+                {
+                    var subFolder = fileInfo.DirectoryName.Substring(fileInfo.DirectoryName.IndexOf(pathFromResourcesFolder) + pathFromResourcesFolder.Length);
+                    subFolder += Path.DirectorySeparatorChar;
+
+                    TextAsset patternFile = Resources.Load<TextAsset>(pathFromResourcesFolder + subFolder + Path.GetFileNameWithoutExtension(fileInfo.Name));
+
+                    XmlTextReader reader = new XmlTextReader(new StringReader(patternFile.text))
+                    {
+                        Normalization = false,
+                        XmlResolver = null
+                    };
+
+                    var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(patternFile.text ?? ""));
+
+                    var pattern = new BulletPattern();
+                    pattern.ParseStream(patternFile.name, fileStream);
+
+                    _bulletPatterns.Add(patternFile.name, pattern);
+                    Debug.Log("Found: " + fileInfo);
+                }
+            }
+        }
+
+        public BulletPattern GetPattern(string patternName)
+        {
+            if (!_bulletPatterns.ContainsKey(patternName))
+                throw new System.Exception("No pattern found for this name: " + patternName);
+
+            return _bulletPatterns[patternName];
+        }
+
+        #endregion
 
         #region Utils
 
