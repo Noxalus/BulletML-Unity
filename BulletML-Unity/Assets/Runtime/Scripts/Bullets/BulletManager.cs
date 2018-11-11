@@ -23,7 +23,7 @@ namespace UnityBulletML.Bullets
         [SerializeField] private string _patternFilesFolder = "";
 
         [Header("References")]
-        [SerializeField] private GameObject _player = null;
+        [SerializeField] private Transform _playerTransform = null;
 
         [Header("Bullet's data")]
         [SerializeField] private int _maxBulletsAmount = 10000;
@@ -119,7 +119,7 @@ namespace UnityBulletML.Bullets
 
         public BulletML.Vector2 PlayerPosition(IBullet targettedBullet)
         {
-            return new BulletML.Vector2(_player.transform.position.x * PixelPerUnit, _player.transform.position.y * PixelPerUnit);
+            return new BulletML.Vector2(_playerTransform.position.x * PixelPerUnit, _playerTransform.position.y * PixelPerUnit);
         }
 
         public IBullet CreateBullet(bool topBullet = false)
