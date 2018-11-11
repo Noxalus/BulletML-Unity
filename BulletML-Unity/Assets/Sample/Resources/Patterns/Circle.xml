@@ -12,7 +12,7 @@
             <bullet>
               <direction type="sequence">82</direction>
               <speed type="absolute">15</speed>
-              <sprite>2</sprite>
+              <sprite>4</sprite>
               <color>
                 <red>0.78</red>
                 <green>0</green>

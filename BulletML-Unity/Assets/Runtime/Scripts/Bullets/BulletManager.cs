@@ -28,6 +28,10 @@ namespace UnityBulletML.Bullets
         [Header("Bullet's data")]
         [SerializeField] private int _maxBulletsAmount = 10000;
         [SerializeField] private float _bulletInitialSize = 1;
+        [Tooltip("Min/Max in screen coordinates")]
+        [SerializeField] private Vector2 _bulletsWidthBoundary = new Vector2(0f, 1f);
+        [Tooltip("Min/Max in screen coordinates")]
+        [SerializeField] private Vector2 _bulletsHeightBoundary = new Vector2(0f, 1f);
         [SerializeField] private Sprite _bulletsTexture = null;
         [SerializeField] private Vector2 _bulletsTextureTiling = new Vector2(0.25f, 0.25f);
         [SerializeField] private BulletProfile[] _bulletProfiles = null;
@@ -46,6 +50,8 @@ namespace UnityBulletML.Bullets
         private Dictionary<string, BulletPattern> _bulletPatterns = new Dictionary<string, BulletPattern>();
 
         public float BulletInitialSize => _bulletInitialSize;
+        public Vector2 BulletsWidthBoundary => _bulletsWidthBoundary;
+        public Vector2 BulletsHeightBoundary => _bulletsHeightBoundary;
 
         #endregion
 

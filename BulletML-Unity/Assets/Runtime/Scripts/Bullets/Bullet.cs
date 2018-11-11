@@ -1,5 +1,4 @@
-﻿using System;
-using UnityBulletML.Bullets.Data;
+﻿using UnityBulletML.Bullets.Data;
 using UnityEngine;
 
 namespace UnityBulletML.Bullets
@@ -89,8 +88,12 @@ namespace UnityBulletML.Bullets
             var screenSpacePosition = Camera.main.WorldToViewportPoint(_position / _bulletManager.PixelPerUnit);
 
             return
-                !((screenSpacePosition.x >= 0 && screenSpacePosition.x <= 1) &&
-                (screenSpacePosition.y >= 0 && screenSpacePosition.y <= 1));
+                !(
+                   screenSpacePosition.x >= _bulletManager.BulletsWidthBoundary.x &&
+                   screenSpacePosition.x <= _bulletManager.BulletsWidthBoundary.y &&
+                   screenSpacePosition.y >= _bulletManager.BulletsHeightBoundary.x &&
+                   screenSpacePosition.y <= _bulletManager.BulletsHeightBoundary.y
+                );
         }
 
         public bool IsTopBullet()
