@@ -74,7 +74,7 @@ namespace UnityBulletML.Bullets
 
         void Awake()
         {
-            GameManager.GameDifficulty = GetDifficulty;
+            BulletML.GameManager.GameDifficulty = GetDifficulty;
             _bullets = new List<Bullet>(_maxBulletsAmount);
         }
 
