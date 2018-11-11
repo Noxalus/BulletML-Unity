@@ -6,7 +6,6 @@ namespace UnityBulletML.Bullets
     {
         [SerializeField] private Material _material = null;
         [SerializeField] private BulletManager _bulletManager = null;
-        [SerializeField] private float _bulletSize = 1f;
         [SerializeField] private int _layer = 0;
         [SerializeField] private Camera _camera= null;
 
@@ -15,8 +14,8 @@ namespace UnityBulletML.Bullets
 
         public void Start()
         {
-            var size = _bulletSize;
-            var pivot = Vector2.one * (_bulletSize / 2f);
+            var size = _bulletManager.BulletInitialSize;
+            var pivot = Vector2.one * (size / 2f);
 
             _mesh = MeshUtils.GenerateQuad(size, pivot);
             _materialPropertyBlock = new MaterialPropertyBlock();
