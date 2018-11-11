@@ -14,8 +14,13 @@ namespace UnityBulletML.Bullets
         [Header("Parameters")]
         [SerializeField] private bool _destroyBulletOnCollision = true;
 
-        [Header("Events")]
-        [SerializeField] private OnCollisionEvent _onCollision = new OnCollisionEvent();
+        private OnCollisionEvent _onCollision = new OnCollisionEvent();
+
+        #region Properties
+
+        public OnCollisionEvent OnCollision => _onCollision;
+
+        #endregion
 
         // Cache the player transform
         private Transform _playerTransform;
