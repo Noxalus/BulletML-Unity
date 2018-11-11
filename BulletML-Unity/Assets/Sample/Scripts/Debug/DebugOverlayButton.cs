@@ -1,23 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class DebugOverlayButton : MonoBehaviour
+namespace UnityBulletML
 {
-    public DebugOverlay DebugOverlay;
-    public Text ButtonText;
-
-    private bool _isDebugOverlayVisible;
-
-    public void Start()
+    public class DebugOverlayButton : MonoBehaviour
     {
-        _isDebugOverlayVisible = true;
-        ButtonText.text = "Hide";
-    }
+        public DebugOverlay DebugOverlay;
+        public Text ButtonText;
 
-    public void OnButtonClick()
-    {
-        _isDebugOverlayVisible = !_isDebugOverlayVisible;
-        DebugOverlay.Show(_isDebugOverlayVisible);
-        ButtonText.text = _isDebugOverlayVisible ? "Hide" : "Show";
+        private bool _isDebugOverlayVisible;
+
+        public void Start()
+        {
+            _isDebugOverlayVisible = true;
+            ButtonText.text = "Hide";
+        }
+
+        public void OnButtonClick()
+        {
+            _isDebugOverlayVisible = !_isDebugOverlayVisible;
+            DebugOverlay.Show(_isDebugOverlayVisible);
+            ButtonText.text = _isDebugOverlayVisible ? "Hide" : "Show";
+        }
     }
 }

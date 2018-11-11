@@ -4,77 +4,80 @@ using UnityBulletML.Bullets;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DebugManager : MonoBehaviour
+namespace UnityBulletML
 {
-    public BulletManager BulletManager;
-    public BulletEmitter BulletEmitter;
-    public Text CurrentPatternText;
-
-    [SerializeField] private string _patternFolder = null;
-
-    private List<TextAsset> _patternFiles;
-    private int _currentPatternIndex;
-
-    public void Start()
+    public class DebugManager : MonoBehaviour
     {
-        UpdateCurrentPatternText();
+        public BulletManager BulletManager;
+        public BulletEmitter BulletEmitter;
+        public Text CurrentPatternText;
 
-        GetAllPatternFiles();
+        [SerializeField] private string _patternFolder = null;
 
-        _currentPatternIndex = 0;
-    }
+        private List<TextAsset> _patternFiles;
+        private int _currentPatternIndex;
 
-    private void UpdateCurrentPatternText()
-    {
-        CurrentPatternText.text = BulletEmitter.PatternFile.name;
-    }
-
-    private void GetAllPatternFiles()
-    {
-        _patternFiles = new List<TextAsset>();
-
-        var directoryInfo = new DirectoryInfo(_patternFolder);
-        var filesInfo = directoryInfo.GetFiles();
-
-        var resourcesFolder = "Resources/";
-        var pathFromResourcesFolder = _patternFolder.Substring(_patternFolder.IndexOf(resourcesFolder) + resourcesFolder.Length);
-
-        foreach (var fileInfo in filesInfo)
+        public void Start()
         {
-            var fileExtension = Path.GetExtension(fileInfo.Name);
+            UpdateCurrentPatternText();
 
-            if (fileExtension.Equals(".xml"))
+            GetAllPatternFiles();
+
+            _currentPatternIndex = 0;
+        }
+
+        private void UpdateCurrentPatternText()
+        {
+            CurrentPatternText.text = BulletEmitter.PatternFile.name;
+        }
+
+        private void GetAllPatternFiles()
+        {
+            _patternFiles = new List<TextAsset>();
+
+            var directoryInfo = new DirectoryInfo(_patternFolder);
+            var filesInfo = directoryInfo.GetFiles();
+
+            var resourcesFolder = "Resources/";
+            var pathFromResourcesFolder = _patternFolder.Substring(_patternFolder.IndexOf(resourcesFolder) + resourcesFolder.Length);
+
+            foreach (var fileInfo in filesInfo)
             {
-                TextAsset patternFile = Resources.Load<TextAsset>(pathFromResourcesFolder + "/" + Path.GetFileNameWithoutExtension(fileInfo.Name));
-                _patternFiles.Add(patternFile);
+                var fileExtension = Path.GetExtension(fileInfo.Name);
 
-                Debug.Log("Found: " + fileInfo);
+                if (fileExtension.Equals(".xml"))
+                {
+                    TextAsset patternFile = Resources.Load<TextAsset>(pathFromResourcesFolder + "/" + Path.GetFileNameWithoutExtension(fileInfo.Name));
+                    _patternFiles.Add(patternFile);
+
+                    Debug.Log("Found: " + fileInfo);
+                }
             }
         }
-    }
 
-    public void NextPattern()
-    {
-        _currentPatternIndex++;
+        public void NextPattern()
+        {
+            _currentPatternIndex++;
 
-        if (_currentPatternIndex >= _patternFiles.Count)
-            _currentPatternIndex = 0;
+            if (_currentPatternIndex >= _patternFiles.Count)
+                _currentPatternIndex = 0;
 
-        BulletManager.Clear();
-        BulletEmitter.SetPatternFile(_patternFiles[_currentPatternIndex]);
+            BulletManager.Clear();
+            BulletEmitter.SetPatternFile(_patternFiles[_currentPatternIndex]);
 
-        UpdateCurrentPatternText();
-    }
+            UpdateCurrentPatternText();
+        }
 
-    public void PreviousPattern()
-    {
-        _currentPatternIndex--;
+        public void PreviousPattern()
+        {
+            _currentPatternIndex--;
 
-        if (_currentPatternIndex < 0)
-            _currentPatternIndex = _patternFiles.Count - 1;
+            if (_currentPatternIndex < 0)
+                _currentPatternIndex = _patternFiles.Count - 1;
 
-        BulletManager.Clear();
-        BulletEmitter.SetPatternFile(_patternFiles[_currentPatternIndex]);
-        UpdateCurrentPatternText();
+            BulletManager.Clear();
+            BulletEmitter.SetPatternFile(_patternFiles[_currentPatternIndex]);
+            UpdateCurrentPatternText();
+        }
     }
 }
