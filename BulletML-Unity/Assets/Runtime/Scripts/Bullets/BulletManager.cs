@@ -42,6 +42,7 @@ namespace UnityBulletML.Bullets
         private List<Vector4[]> _bulletColorsBatches = new List<Vector4[]>();
 
         private List<Bullet> _bullets;
+        private Queue<Bullet> _unusedBullets = new Queue<Bullet>();
         private Dictionary<string, BulletPattern> _bulletPatterns = new Dictionary<string, BulletPattern>();
 
         public float BulletInitialSize => _bulletInitialSize;
@@ -127,9 +128,19 @@ namespace UnityBulletML.Bullets
             if (_bullets.Count >= _maxBulletsAmount)
                 return null;
 
-            var bullet = new Bullet(this);
+            Bullet bullet;
+
+            if (_unusedBullets.Count > 0)
+            {
+                bullet = _unusedBullets.Dequeue();
+            }
+            else
+            {
+                bullet = new Bullet(this);
+                _bullets.Add(bullet);
+            }
+
             bullet.Init(topBullet);
-            _bullets.Add(bullet);
 
             return bullet;
         }
@@ -146,6 +157,8 @@ namespace UnityBulletML.Bullets
 
         public void FixedUpdate()
         {
+            var _bulletsToRemove = new List<Bullet>();
+
             for (int i = 0; i < _bullets.Count; i++)
             {
                 Bullet currentBullet = _bullets[i];
@@ -165,8 +178,7 @@ namespace UnityBulletML.Bullets
 
                 if (!currentBullet.Used)
                 {
-                    _bullets.Remove(_bullets[i]);
-                    i--;
+                    _bulletsToRemove.Add(currentBullet);
                 }
                 else
                 {
@@ -185,6 +197,15 @@ namespace UnityBulletML.Bullets
                     }
                 }
             }
+
+            // Enqueue unused bullets
+            foreach (var bullet in _bulletsToRemove)
+            {
+                // TODO: Make it work!
+                //_unusedBullets.Enqueue(bullet);
+            }
+
+            _bulletsToRemove.Clear();
         }
 
         public void Clear()
