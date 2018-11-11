@@ -10,8 +10,13 @@ namespace UnityBulletML.Bullets
     {
         #region Serialize fields
 
+        [Header("References")]
         [SerializeField] private TextAsset _patternFile = null;
         [SerializeField] private BulletManager _bulletManager = null;
+
+        [Header("Repeat")]
+        [SerializeField] private bool _repeat = false;
+        [SerializeField] private float _repeatFrequency = 1f;
 
         #endregion
 
@@ -19,6 +24,7 @@ namespace UnityBulletML.Bullets
 
         private BulletPattern _pattern;
         private Bullet _rootBullet;
+        private float _repeatTimer;
 
         #endregion
 
@@ -47,6 +53,8 @@ namespace UnityBulletML.Bullets
                 LoadPattern();
                 AddBullet();
             }
+
+            _repeatTimer = _repeatFrequency;
         }
 
         void Update()
@@ -55,6 +63,17 @@ namespace UnityBulletML.Bullets
             if (_rootBullet != null && transform.hasChanged)
             {
                 _rootBullet.SetPosition(transform.position);
+            }
+
+            if (_repeat)
+            {
+                _repeatTimer -= Time.deltaTime;
+
+                if (_repeatTimer < 0)
+                {
+                    _repeatTimer = _repeatFrequency;
+                    AddBullet();
+                }
             }
         }
 
