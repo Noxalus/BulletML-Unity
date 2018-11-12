@@ -113,6 +113,11 @@ namespace UnityBulletML.Bullets
                 if (!currentBullet.Used)
                 {
                     _bulletsToRemove.Add(currentBullet);
+
+                    // Hide unused bullets
+                    _bulletMatricesBatches[batchIndex][elementIndex] = Matrix4x4.zero;
+                    _bulletSpriteOffsetsBatches[batchIndex][elementIndex] = Vector4.zero;
+                    _bulletColorsBatches[batchIndex][elementIndex] = Vector4.zero;
                 }
                 else
                 {
