@@ -91,8 +91,6 @@ namespace UnityBulletML.Bullets
             if (_pause)
                 return;
 
-            var _bulletsToRemove = new List<Bullet>();
-
             for (int i = 0; i < _bullets.Count; i++)
             {
                 Bullet currentBullet = _bullets[i];
@@ -116,8 +114,7 @@ namespace UnityBulletML.Bullets
                 if (!currentBullet.Used)
                 {
                     currentBullet.Hidden = true;
-
-                    _bulletsToRemove.Add(currentBullet);
+                    _unusedBullets.Enqueue(currentBullet);
 
                     // Hide unused bullets
                     _bulletMatricesBatches[batchIndex][elementIndex] = Matrix4x4.zero;
@@ -141,19 +138,12 @@ namespace UnityBulletML.Bullets
                     }
                 }
             }
-
-            // Enqueue unused bullets
-            foreach (var bullet in _bulletsToRemove)
-            {
-                _unusedBullets.Enqueue(bullet);
-            }
-
-            _bulletsToRemove.Clear();
         }
 
         public void Clear()
         {
             _bullets.Clear();
+            _unusedBullets.Clear();
             _bulletMatricesBatches.Clear();
             _bulletSpriteOffsetsBatches.Clear();
             _bulletColorsBatches.Clear();
