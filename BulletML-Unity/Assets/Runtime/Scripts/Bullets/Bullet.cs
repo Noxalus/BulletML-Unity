@@ -41,6 +41,8 @@ namespace UnityBulletML.Bullets
             }
         }
 
+        public bool Hidden = false;
+
         public bool Used { get; set; }
 
         #endregion
@@ -53,6 +55,7 @@ namespace UnityBulletML.Bullets
         public void Init(bool topBullet)
         {
             Used = true;
+            Hidden = false;
             _topBullet = topBullet;
         }
 

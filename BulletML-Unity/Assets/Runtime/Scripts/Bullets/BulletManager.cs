@@ -97,6 +97,9 @@ namespace UnityBulletML.Bullets
             {
                 Bullet currentBullet = _bullets[i];
 
+                if (currentBullet.Hidden)
+                    continue;
+
                 currentBullet.Update(Time.fixedDeltaTime);
 
                 int batchIndex = i / MAX_BATCH_AMOUNT;
@@ -112,6 +115,8 @@ namespace UnityBulletML.Bullets
 
                 if (!currentBullet.Used)
                 {
+                    currentBullet.Hidden = true;
+
                     _bulletsToRemove.Add(currentBullet);
 
                     // Hide unused bullets
@@ -140,8 +145,7 @@ namespace UnityBulletML.Bullets
             // Enqueue unused bullets
             foreach (var bullet in _bulletsToRemove)
             {
-                // TODO: Make it work!
-                //_unusedBullets.Enqueue(bullet);
+                _unusedBullets.Enqueue(bullet);
             }
 
             _bulletsToRemove.Clear();
