@@ -195,25 +195,23 @@ namespace UnityBulletML.Bullets
 
         #region Pattern files
 
+        public BulletPattern LoadPattern(TextAsset patternFile)
+        {
+            var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(patternFile.text ?? ""));
+
+            var pattern = new BulletPattern();
+            pattern.ParseStream(patternFile.name, fileStream);
+
+            return pattern;
+        }
+
         public void LoadPatterns()
         {
             var patterns = Resources.LoadAll(_patternFilesFolder, typeof(TextAsset));
 
             foreach (TextAsset patternFile in patterns)
             {
-                XmlTextReader reader = new XmlTextReader(new StringReader(patternFile.text))
-                {
-                    Normalization = false,
-                    XmlResolver = null
-                };
-
-                var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(patternFile.text ?? ""));
-
-                var pattern = new BulletPattern();
-                pattern.ParseStream(patternFile.name, fileStream);
-
-                _bulletPatterns.Add(patternFile.name, pattern);
-
+                _bulletPatterns.Add(patternFile.name, LoadPattern(patternFile));
                 Debug.Log("New pattern loaded: " + patternFile.name);
             }
         }

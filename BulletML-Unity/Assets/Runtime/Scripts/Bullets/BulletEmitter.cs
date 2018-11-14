@@ -1,7 +1,4 @@
 ﻿using BulletML;
-using System.IO;
-using System.Text;
-using System.Xml;
 using UnityEngine;
 
 namespace UnityBulletML.Bullets
@@ -20,7 +17,7 @@ namespace UnityBulletML.Bullets
 
         #endregion
 
-        #region Properties
+        #region Fields
 
         private BulletPattern _pattern;
         private Bullet _rootBullet;
@@ -28,7 +25,7 @@ namespace UnityBulletML.Bullets
 
         #endregion
 
-        #region Getters/Setters
+        #region Properties
 
         public TextAsset PatternFile => _patternFile;
 
@@ -50,7 +47,7 @@ namespace UnityBulletML.Bullets
         {
             if (PatternFile != null)
             {
-                LoadPattern();
+                _pattern = _bulletManager.LoadPattern(PatternFile);
                 AddBullet();
             }
 
@@ -95,32 +92,9 @@ namespace UnityBulletML.Bullets
             }
         }
 
-        public void SetPatternFile(TextAsset patternFile)
-        {
-            _patternFile = patternFile;
-            LoadPattern();
-        }
-
         public void SetPattern(BulletPattern pattern)
         {
             _pattern = pattern;
-        }
-
-        public void LoadPattern()
-        {
-            XmlTextReader reader = new XmlTextReader(new StringReader(_patternFile.text))
-            {
-                Normalization = false,
-                XmlResolver = null
-            };
-
-            var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(_patternFile.text ?? ""));
-
-            _pattern = new BulletPattern();
-            _pattern.ParseStream(_patternFile.name, fileStream);
-            //loadedPattern.ParsePattern(reader, patternFile.name);
-
-            Debug.Log("Pattern loaded: " + _pattern.Filename);
         }
     }
 }
