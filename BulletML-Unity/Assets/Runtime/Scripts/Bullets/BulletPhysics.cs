@@ -51,7 +51,8 @@ namespace UnityBulletML.Bullets
 
                 var dx = (currentBullet.Position.x / _bulletManager.PixelPerUnit) - _playerTransform.position.x;
                 var dy = (currentBullet.Position.y / _bulletManager.PixelPerUnit) - _playerTransform.position.y;
-                var radius = (currentBullet.GetProfile().CollisionRadius * _bulletManager.BulletInitialSize) + _playerCollider.radius;
+                var bulletRadius = (currentBullet.GetProfile().CollisionRadius * _bulletManager.BulletInitialSize * currentBullet.Scale);
+                var radius = bulletRadius + _playerCollider.radius;
 
                 if ((dx * dx) + (dy * dy) < radius * radius)
                 {

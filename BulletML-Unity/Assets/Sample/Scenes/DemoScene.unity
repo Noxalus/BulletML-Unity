@@ -1104,7 +1104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147aaeb6501865746ac0defcf13e9289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _patternFile: {fileID: 4900000, guid: 738be7bbc35d7bd48b9fbc815e4f121a, type: 3}
+  _patternFile: {fileID: 0}
   _bulletManager: {fileID: 1359527581}
   _repeat: 0
   _repeatFrequency: 1
@@ -1397,6 +1397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerCollider: {fileID: 396486030}
   _bulletManager: {fileID: 1359527581}
+  _destroyBulletOnCollision: 1
 --- !u!114 &1359527580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1426,10 +1427,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _difficulty: 0.5
-  _patternFilesFolder: Assets/Sample/Resources/Patterns
+  _patternFilesFolder: Pattern
   _playerTransform: {fileID: 396486025}
   _maxBulletsAmount: 10000
   _bulletInitialSize: 2
+  _bulletsWidthBoundary: {x: 0, y: 1}
+  _bulletsHeightBoundary: {x: 0, y: 1}
   _bulletsTexture: {fileID: 21300000, guid: 77113ab205d8a5248b4e720bb9f27c7b, type: 3}
   _bulletsTextureTiling: {x: 0.25, y: 0.25}
   _bulletProfiles:
@@ -1678,7 +1681,6 @@ MonoBehaviour:
   BulletManager: {fileID: 1359527581}
   BulletEmitter: {fileID: 1252751608}
   CurrentPatternText: {fileID: 1925366222}
-  _patternFolder: Assets/Sample/Resources/Patterns
 --- !u!1 &1634324580
 GameObject:
   m_ObjectHideFlags: 0

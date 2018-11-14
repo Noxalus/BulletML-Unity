@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using UnityBulletML.Bullets;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,58 +12,34 @@ namespace UnityBulletMLSample
         public BulletEmitter BulletEmitter;
         public Text CurrentPatternText;
 
-        [SerializeField] private string _patternFolder = null;
-
-        private List<TextAsset> _patternFiles;
         private int _currentPatternIndex;
+        private List<string> _patternNames;
 
         public void Start()
         {
             UpdateCurrentPatternText();
 
-            GetAllPatternFiles();
+            BulletManager.LoadPatterns();
+            _patternNames = BulletManager.GetPatternDictionary().Keys.ToList();
 
             _currentPatternIndex = 0;
         }
 
         private void UpdateCurrentPatternText()
         {
-            CurrentPatternText.text = BulletEmitter.PatternFile.name;
-        }
-
-        private void GetAllPatternFiles()
-        {
-            _patternFiles = new List<TextAsset>();
-
-            var directoryInfo = new DirectoryInfo(_patternFolder);
-            var filesInfo = directoryInfo.GetFiles();
-
-            var resourcesFolder = "Resources/";
-            var pathFromResourcesFolder = _patternFolder.Substring(_patternFolder.IndexOf(resourcesFolder) + resourcesFolder.Length);
-
-            foreach (var fileInfo in filesInfo)
-            {
-                var fileExtension = Path.GetExtension(fileInfo.Name);
-
-                if (fileExtension.Equals(".xml"))
-                {
-                    TextAsset patternFile = Resources.Load<TextAsset>(pathFromResourcesFolder + "/" + Path.GetFileNameWithoutExtension(fileInfo.Name));
-                    _patternFiles.Add(patternFile);
-
-                    Debug.Log("Found: " + fileInfo);
-                }
-            }
+            if (BulletEmitter.PatternFile)
+                CurrentPatternText.text = BulletEmitter.PatternFile.name;
         }
 
         public void NextPattern()
         {
             _currentPatternIndex++;
 
-            if (_currentPatternIndex >= _patternFiles.Count)
+            if (_currentPatternIndex >= _patternNames.Count)
                 _currentPatternIndex = 0;
 
             BulletManager.Clear();
-            BulletEmitter.SetPatternFile(_patternFiles[_currentPatternIndex]);
+            BulletEmitter.SetPattern(BulletManager.GetPattern(_patternNames[_currentPatternIndex]));
 
             UpdateCurrentPatternText();
         }
@@ -73,10 +49,10 @@ namespace UnityBulletMLSample
             _currentPatternIndex--;
 
             if (_currentPatternIndex < 0)
-                _currentPatternIndex = _patternFiles.Count - 1;
+                _currentPatternIndex = _patternNames.Count - 1;
 
             BulletManager.Clear();
-            BulletEmitter.SetPatternFile(_patternFiles[_currentPatternIndex]);
+            BulletEmitter.SetPattern(BulletManager.GetPattern(_patternNames[_currentPatternIndex]));
             UpdateCurrentPatternText();
         }
     }

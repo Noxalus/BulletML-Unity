@@ -197,8 +197,12 @@ namespace UnityBulletML.Bullets
 
         public void LoadPatterns()
         {
+            Debug.Log("Pattern directory: " + _patternFilesFolder);
+
             var directoryInfo = new DirectoryInfo(_patternFilesFolder);
             var filesInfo = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories);
+
+            Debug.Log("Files found: " + filesInfo.Length);
 
             var resourcesFolder = "Resources/";
             var pathFromResourcesFolder = _patternFilesFolder.Substring(_patternFilesFolder.IndexOf(resourcesFolder) + resourcesFolder.Length);
@@ -229,6 +233,11 @@ namespace UnityBulletML.Bullets
                     Debug.Log("Found: " + fileInfo);
                 }
             }
+        }
+
+        public Dictionary<string, BulletPattern> GetPatternDictionary()
+        {
+            return _bulletPatterns;
         }
 
         public BulletPattern GetPattern(string patternName)
