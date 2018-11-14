@@ -10,6 +10,7 @@ namespace UnityBulletML.Bullets
         private Vector2 _position;
         private BulletManager _bulletManager;
         private bool _topBullet;
+        private Matrix4x4 _transformMatrix = Matrix4x4.identity;
 
         #endregion
 
@@ -33,11 +34,13 @@ namespace UnityBulletML.Bullets
         {
             get
             {
-                return Matrix4x4.TRS(
+                _transformMatrix.SetTRS(
                     _position / _bulletManager.PixelPerUnit,
                     Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Direction + 180f),
                     Vector3.one * Scale
                 );
+
+                return _transformMatrix;
             }
         }
 
