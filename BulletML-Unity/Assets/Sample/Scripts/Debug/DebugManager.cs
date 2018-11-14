@@ -17,18 +17,17 @@ namespace UnityBulletMLSample
 
         public void Start()
         {
-            UpdateCurrentPatternText();
-
             BulletManager.LoadPatterns();
             _patternNames = BulletManager.GetPatternDictionary().Keys.ToList();
 
             _currentPatternIndex = 0;
+            BulletEmitter.SetPattern(BulletManager.GetPattern(_patternNames[_currentPatternIndex]));
+            UpdateCurrentPatternText();
         }
 
         private void UpdateCurrentPatternText()
         {
-            if (BulletEmitter.PatternFile)
-                CurrentPatternText.text = BulletEmitter.PatternFile.name;
+            CurrentPatternText.text = _patternNames[_currentPatternIndex];
         }
 
         public void NextPattern()
