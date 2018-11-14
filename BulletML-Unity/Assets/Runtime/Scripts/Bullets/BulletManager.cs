@@ -197,41 +197,24 @@ namespace UnityBulletML.Bullets
 
         public void LoadPatterns()
         {
-            Debug.Log("Pattern directory: " + _patternFilesFolder);
+            var patterns = Resources.LoadAll(_patternFilesFolder, typeof(TextAsset));
 
-            var directoryInfo = new DirectoryInfo(_patternFilesFolder);
-            var filesInfo = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories);
-
-            Debug.Log("Files found: " + filesInfo.Length);
-
-            var resourcesFolder = "Resources/";
-            var pathFromResourcesFolder = _patternFilesFolder.Substring(_patternFilesFolder.IndexOf(resourcesFolder) + resourcesFolder.Length);
-
-            foreach (var fileInfo in filesInfo)
+            foreach (TextAsset patternFile in patterns)
             {
-                var fileExtension = Path.GetExtension(fileInfo.Name);
-
-                if (fileExtension.Equals(".xml"))
+                XmlTextReader reader = new XmlTextReader(new StringReader(patternFile.text))
                 {
-                    var subFolder = fileInfo.DirectoryName.Substring(fileInfo.DirectoryName.IndexOf(pathFromResourcesFolder) + pathFromResourcesFolder.Length);
-                    subFolder += Path.DirectorySeparatorChar;
+                    Normalization = false,
+                    XmlResolver = null
+                };
 
-                    TextAsset patternFile = Resources.Load<TextAsset>(pathFromResourcesFolder + subFolder + Path.GetFileNameWithoutExtension(fileInfo.Name));
+                var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(patternFile.text ?? ""));
 
-                    XmlTextReader reader = new XmlTextReader(new StringReader(patternFile.text))
-                    {
-                        Normalization = false,
-                        XmlResolver = null
-                    };
+                var pattern = new BulletPattern();
+                pattern.ParseStream(patternFile.name, fileStream);
 
-                    var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(patternFile.text ?? ""));
+                _bulletPatterns.Add(patternFile.name, pattern);
 
-                    var pattern = new BulletPattern();
-                    pattern.ParseStream(patternFile.name, fileStream);
-
-                    _bulletPatterns.Add(patternFile.name, pattern);
-                    Debug.Log("Found: " + fileInfo);
-                }
+                Debug.Log("New pattern loaded: " + patternFile.name);
             }
         }
 
