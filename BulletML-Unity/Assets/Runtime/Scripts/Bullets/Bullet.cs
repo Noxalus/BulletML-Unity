@@ -18,24 +18,12 @@ namespace UnityBulletML.Bullets
 
         public Vector2 Position => _position;
 
-        public override float X
-        {
-            get { return _position.x; }
-            set { _position.x = value; }
-        }
-
-        public override float Y
-        {
-            get { return _position.y; }
-            set { _position.y = value; }
-        }
-
         public Matrix4x4 TransformMatrix
         {
             get
             {
                 _transformMatrix.SetTRS(
-                    _position / _bulletManager.PixelPerUnit,
+                    _position,
                     Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Direction + 180f),
                     Vector3.one * Scale
                 );
@@ -47,6 +35,22 @@ namespace UnityBulletML.Bullets
         public bool Hidden = false;
 
         public bool Used { get; set; }
+
+        #endregion
+
+        #region BulletML.Bullet override
+
+        public override float X
+        {
+            get { return _position.x * _bulletManager.PixelPerUnit; }
+            set { _position.x = value / _bulletManager.PixelPerUnit; }
+        }
+
+        public override float Y
+        {
+            get { return _position.y * _bulletManager.PixelPerUnit; }
+            set { _position.y = value / _bulletManager.PixelPerUnit; }
+        }
 
         #endregion
 
@@ -91,7 +95,7 @@ namespace UnityBulletML.Bullets
 
         public bool IsOutOfBound()
         {
-            var screenSpacePosition = Camera.main.WorldToViewportPoint(_position / _bulletManager.PixelPerUnit);
+            var screenSpacePosition = Camera.main.WorldToViewportPoint(Position);
 
             return
                 !(
