@@ -48,8 +48,8 @@ namespace UnityBulletML.Bullets
 
         public override float Y
         {
-            get { return -_position.y * _bulletManager.PixelPerUnit; }
-            set { _position.y = -value / _bulletManager.PixelPerUnit; }
+            get { return _position.y * _bulletManager.PixelPerUnit; }
+            set { _position.y = value / _bulletManager.PixelPerUnit; }
         }
 
         #endregion
