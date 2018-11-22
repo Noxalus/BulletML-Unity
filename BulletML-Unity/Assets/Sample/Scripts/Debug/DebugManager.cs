@@ -23,6 +23,7 @@ namespace UnityBulletMLSample
             _currentPatternIndex = 0;
             BulletEmitter.SetPattern(BulletManager.GetPattern(_patternNames[_currentPatternIndex]));
             UpdateCurrentPatternText();
+            BulletEmitter.AddBullet(true);
         }
 
         private void UpdateCurrentPatternText()
@@ -37,8 +38,8 @@ namespace UnityBulletMLSample
             if (_currentPatternIndex >= _patternNames.Count)
                 _currentPatternIndex = 0;
 
-            BulletManager.Clear();
             BulletEmitter.SetPattern(BulletManager.GetPattern(_patternNames[_currentPatternIndex]));
+            BulletEmitter.AddBullet(true);
 
             UpdateCurrentPatternText();
         }
@@ -50,9 +51,9 @@ namespace UnityBulletMLSample
             if (_currentPatternIndex < 0)
                 _currentPatternIndex = _patternNames.Count - 1;
 
-            BulletManager.Clear();
             BulletEmitter.SetPattern(BulletManager.GetPattern(_patternNames[_currentPatternIndex]));
             UpdateCurrentPatternText();
+            BulletEmitter.AddBullet(true);
         }
     }
 }
