@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml;
 using UnityBulletML.Bullets.Data;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
@@ -69,9 +68,74 @@ namespace UnityBulletML.Bullets
 
         #endregion
 
+        #region BulletML specific methods
+
+        private float GetDifficulty()
+        {
+            return _difficulty;
+        }
+
+        private float RandomNextFloat()
+        {
+            return Random.value;
+        }
+
+        private int RandomNextInt(int min, int max)
+        {
+            return Random.Range(min, max);
+        }
+
+        public BulletML.Vector2 PlayerPosition(IBullet targettedBullet)
+        {
+            return new BulletML.Vector2(_playerTransform.position.x * PixelPerUnit, _playerTransform.position.y * PixelPerUnit);
+        }
+
+        public IBullet CreateBullet(bool topBullet = false)
+        {
+            if (_bullets.Count >= _maxBulletsAmount)
+                return null;
+
+            Bullet bullet;
+
+            if (_unusedBullets.Count > 0)
+            {
+                bullet = _unusedBullets.Dequeue();
+            }
+            else
+            {
+                bullet = new Bullet(this);
+                _bullets.Add(bullet);
+            }
+
+            bullet.Init(topBullet);
+
+            return bullet;
+        }
+
+        public void RemoveBullet(IBullet deadBullet)
+        {
+            var bullet = deadBullet as Bullet;
+
+            if (bullet != null)
+                bullet.Used = false;
+        }
+
+        #endregion
+
         void Awake()
         {
+            #region BulletML setup
+
+            // Gameplay
             BulletML.GameManager.GameDifficulty = GetDifficulty;
+
+            // Configuration
+            BulletML.Configuration.YUpAxis = false;
+            BulletML.Configuration.RandomNextFloat = RandomNextFloat;
+            BulletML.Configuration.RandomNextInt = RandomNextInt;
+
+            #endregion
+
             _bullets = new List<Bullet>(_maxBulletsAmount);
             _pause = false;
         }
@@ -148,50 +212,6 @@ namespace UnityBulletML.Bullets
             _bulletSpriteOffsetsBatches.Clear();
             _bulletColorsBatches.Clear();
         }
-
-        #region IBulletManager
-
-        private float GetDifficulty()
-        {
-            return _difficulty;
-        }
-
-        public BulletML.Vector2 PlayerPosition(IBullet targettedBullet)
-        {
-            return new BulletML.Vector2(_playerTransform.position.x * PixelPerUnit, _playerTransform.position.y * PixelPerUnit);
-        }
-
-        public IBullet CreateBullet(bool topBullet = false)
-        {
-            if (_bullets.Count >= _maxBulletsAmount)
-                return null;
-
-            Bullet bullet;
-
-            if (_unusedBullets.Count > 0)
-            {
-                bullet = _unusedBullets.Dequeue();
-            }
-            else
-            {
-                bullet = new Bullet(this);
-                _bullets.Add(bullet);
-            }
-
-            bullet.Init(topBullet);
-
-            return bullet;
-        }
-
-        public void RemoveBullet(IBullet deadBullet)
-        {
-            var bullet = deadBullet as Bullet;
-
-            if (bullet != null)
-                bullet.Used = false;
-        }
-
-        #endregion
 
         #region Pattern files
 
