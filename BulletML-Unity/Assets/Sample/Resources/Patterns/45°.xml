@@ -3,6 +3,14 @@
 <bulletml>
   <action label="top">
     <action>
+      <fire>
+        <bullet>
+          <direction type="absolute">0</direction>
+          <speed>1</speed>
+          <sprite>1</sprite>
+        </bullet>
+      </fire>
+      <wait>30</wait>
       <repeat>
         <times>0</times>
         <action>
