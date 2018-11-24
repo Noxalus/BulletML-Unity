@@ -7,23 +7,31 @@ namespace UnityBulletML.Bullets
     {
         #region Properties
 
-        private Vector2 _position;
         private BulletManager _bulletManager;
         private bool _topBullet;
         private Matrix4x4 _transformMatrix = Matrix4x4.identity;
+
+        private float _x;
+        private float _y;
 
         #endregion
 
         #region Getters/Setters
 
-        public Vector2 Position => _position;
+        public Vector2 Position
+        {
+            get
+            {
+                return new Vector2(_x, _y);
+            }
+        }
 
         public Matrix4x4 TransformMatrix
         {
             get
             {
                 _transformMatrix.SetTRS(
-                    _position,
+                    Position,
                     Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Direction + 180f),
                     Vector3.one * Scale
                 );
@@ -42,15 +50,17 @@ namespace UnityBulletML.Bullets
 
         public override float X
         {
-            get { return _position.x * _bulletManager.PixelPerUnit; }
-            set { _position.x = value / _bulletManager.PixelPerUnit; }
+            get { return _x * _bulletManager.PixelPerUnit; }
+            set { _x = value / _bulletManager.PixelPerUnit; }
         }
 
         public override float Y
         {
-            get { return _position.y * _bulletManager.PixelPerUnit; }
-            set { _position.y = value / _bulletManager.PixelPerUnit; }
+            get { return _y * _bulletManager.PixelPerUnit; }
+            set { _y = value / _bulletManager.PixelPerUnit; }
         }
+
+        public override float Direction { get => base.Direction; set => base.Direction = -value + Mathf.PI; }
 
         #endregion
 
