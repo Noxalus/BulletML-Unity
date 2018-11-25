@@ -86,7 +86,7 @@ namespace UnityBulletML.Bullets
 
             if (_rootBullet != null)
             {
-                _rootBullet.SetDirection(transform.localRotation.eulerAngles.z);
+                _rootBullet.SetDirection(transform.rotation.eulerAngles.z);
                 _rootBullet.SetPosition(transform.position);
                 _rootBullet.InitTopNode(_pattern.RootNode);
             }
