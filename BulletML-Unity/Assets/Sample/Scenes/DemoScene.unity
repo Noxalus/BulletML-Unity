@@ -1443,6 +1443,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a4c341a1690dec84abcc9b457423035d, type: 2}
   - {fileID: 11400000, guid: a1ee5e98b7eec6145b37231bd12d027c, type: 2}
   - {fileID: 11400000, guid: f3574f98986ef974097cfe1ffdea68ed, type: 2}
+  _yUpAxis: 1
 --- !u!4 &1359527582
 Transform:
   m_ObjectHideFlags: 0

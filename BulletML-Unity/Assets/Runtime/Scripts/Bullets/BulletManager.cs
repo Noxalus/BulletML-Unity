@@ -10,6 +10,17 @@ namespace UnityBulletML.Bullets
 {
     public class BulletManager : MonoBehaviour, IBulletManager
     {
+        #region Editor
+
+#if UNITY_EDITOR
+        public void OnValidate()
+        {
+            BulletML.Configuration.YUpAxis = _yUpAxis;
+        }
+#endif
+
+        #endregion
+
         // DrawMeshInstanced is limited to array of maximum 1023 elements
         public const int MAX_BATCH_AMOUNT = 1023;
 
@@ -34,6 +45,9 @@ namespace UnityBulletML.Bullets
         [SerializeField] private Sprite _bulletsTexture = null;
         [SerializeField] private Vector2 _bulletsTextureTiling = new Vector2(0.25f, 0.25f);
         [SerializeField] private BulletProfile[] _bulletProfiles = null;
+
+        [Header("BulletML configuration")]
+        [SerializeField] private bool _yUpAxis = false;
 
         #endregion
 
@@ -130,7 +144,7 @@ namespace UnityBulletML.Bullets
             BulletML.GameManager.GameDifficulty = GetDifficulty;
 
             // Configuration
-            BulletML.Configuration.YUpAxis = false;
+            BulletML.Configuration.YUpAxis = _yUpAxis;
             BulletML.Configuration.RandomNextFloat = RandomNextFloat;
             BulletML.Configuration.RandomNextInt = RandomNextInt;
 

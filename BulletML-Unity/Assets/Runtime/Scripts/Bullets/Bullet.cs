@@ -32,7 +32,7 @@ namespace UnityBulletML.Bullets
             {
                 _transformMatrix.SetTRS(
                     Position,
-                    Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Direction + 180f),
+                    Quaternion.Euler(0f, 0f, Mathf.Rad2Deg * Rotation),
                     Vector3.one * Scale
                 );
 
@@ -60,8 +60,6 @@ namespace UnityBulletML.Bullets
             set { _y = value / _bulletManager.PixelPerUnit; }
         }
 
-        public override float Direction { get => base.Direction; set => base.Direction = -value + Mathf.PI; }
-
         #endregion
 
         public Bullet(BulletML.IBulletManager bulletManager) : base(bulletManager)
@@ -87,7 +85,7 @@ namespace UnityBulletML.Bullets
         // TODO: Make it work
         public void SetDirection(float direction)
         {
-            Direction = Mathf.Deg2Rad * (direction - 180f);
+            Rotation = Mathf.Deg2Rad * (direction - 180f);
         }
 
         public BulletProfile GetProfile()

@@ -9,6 +9,7 @@
           <bullet>
             <direction type="aim">0</direction>
             <speed>1</speed>
+            <sprite>2</sprite>
             <action>
               <changeSpeed>
                 <speed>20</speed>
