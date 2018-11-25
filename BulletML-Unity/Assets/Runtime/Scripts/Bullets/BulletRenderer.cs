@@ -7,7 +7,7 @@ namespace UnityBulletML.Bullets
         [SerializeField] private Material _material = null;
         [SerializeField] private BulletManager _bulletManager = null;
         [SerializeField] private int _layer = 0;
-        [SerializeField] private Camera _camera= null;
+        [SerializeField] private Camera _renderingCamera= null;
 
         private Mesh _mesh;
         MaterialPropertyBlock _materialPropertyBlock;
@@ -19,6 +19,16 @@ namespace UnityBulletML.Bullets
 
             _mesh = MeshUtils.GenerateQuad(size, pivot);
             _materialPropertyBlock = new MaterialPropertyBlock();
+        }
+
+        public void SetLayer(int layer)
+        {
+            _layer = layer;
+        }
+
+        public void SetRenderingCamera(Camera camera)
+        {
+            _renderingCamera = camera;
         }
 
         private void Update()
@@ -42,7 +52,7 @@ namespace UnityBulletML.Bullets
 
                 Graphics.DrawMeshInstanced(
                     _mesh, 0, _material, transformMatrixBatch, transformMatrixBatch.Length, _materialPropertyBlock,
-                    UnityEngine.Rendering.ShadowCastingMode.Off, false, _layer, _camera
+                    UnityEngine.Rendering.ShadowCastingMode.Off, false, _layer, _renderingCamera
                 );
             }
         }
