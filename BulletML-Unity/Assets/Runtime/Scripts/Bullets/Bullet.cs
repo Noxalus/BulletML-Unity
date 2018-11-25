@@ -82,10 +82,9 @@ namespace UnityBulletML.Bullets
             Y = position.y * _bulletManager.PixelPerUnit;
         }
 
-        // TODO: Make it work
         public void SetDirection(float direction)
         {
-            Rotation = Mathf.Deg2Rad * (direction - 180f);
+            Rotation = Mathf.Deg2Rad * direction;
         }
 
         public BulletProfile GetProfile()
