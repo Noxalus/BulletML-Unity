@@ -49,8 +49,8 @@ namespace UnityBulletML.Bullets
 
                 var bulletPosition = new Vector3(currentBullet.Position.x, currentBullet.Position.y, 0f) / _bulletManager.PixelPerUnit;
 
-                var dx = (currentBullet.Position.x / _bulletManager.PixelPerUnit) - _playerTransform.position.x;
-                var dy = (currentBullet.Position.y / _bulletManager.PixelPerUnit) - _playerTransform.position.y;
+                var dx = currentBullet.Position.x - _playerTransform.position.x;
+                var dy = currentBullet.Position.y - _playerTransform.position.y;
                 var bulletRadius = (currentBullet.GetProfile().CollisionRadius * _bulletManager.BulletInitialSize * currentBullet.Scale);
                 var radius = bulletRadius + _playerCollider.radius;
 
