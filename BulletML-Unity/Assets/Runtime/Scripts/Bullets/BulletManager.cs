@@ -63,6 +63,7 @@ namespace UnityBulletML.Bullets
         private Dictionary<string, BulletPattern> _bulletPatterns = new Dictionary<string, BulletPattern>();
 
         private bool _pause;
+        private Camera _camera;
 
         #endregion
 
@@ -79,6 +80,8 @@ namespace UnityBulletML.Bullets
         public float BulletInitialSize => _bulletInitialSize;
         public Vector2 BulletsWidthBoundary => _bulletsWidthBoundary;
         public Vector2 BulletsHeightBoundary => _bulletsHeightBoundary;
+
+        public Camera Camera => _camera;
 
         #endregion
 
@@ -152,6 +155,7 @@ namespace UnityBulletML.Bullets
 
             _bullets = new List<Bullet>(_maxBulletsAmount);
             _pause = false;
+            _camera = Camera.main;
         }
 
         public void Pause()

@@ -102,15 +102,14 @@ namespace UnityBulletML.Bullets
 
         public bool IsOutOfBound()
         {
-            var screenSpacePosition = Camera.main.WorldToViewportPoint(Position);
+            var screenSpacePosition = _bulletManager.Camera.WorldToViewportPoint(Position);
 
-            return
-                !(
-                   screenSpacePosition.x >= _bulletManager.BulletsWidthBoundary.x &&
-                   screenSpacePosition.x <= _bulletManager.BulletsWidthBoundary.y &&
-                   screenSpacePosition.y >= _bulletManager.BulletsHeightBoundary.x &&
-                   screenSpacePosition.y <= _bulletManager.BulletsHeightBoundary.y
-                );
+            return !(
+                screenSpacePosition.x >= _bulletManager.BulletsWidthBoundary.x &&
+                screenSpacePosition.x <= _bulletManager.BulletsWidthBoundary.y &&
+                screenSpacePosition.y >= _bulletManager.BulletsHeightBoundary.x &&
+                screenSpacePosition.y <= _bulletManager.BulletsHeightBoundary.y
+            );
         }
 
         public bool IsTopBullet()
