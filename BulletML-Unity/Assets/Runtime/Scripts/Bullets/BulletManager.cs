@@ -1,4 +1,4 @@
-﻿using BulletML;
+﻿using BulletMLI;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -15,7 +15,7 @@ namespace UnityBulletML.Bullets
 #if UNITY_EDITOR
         public void OnValidate()
         {
-            BulletML.Configuration.YUpAxis = _yUpAxis;
+            BulletMLI.Configuration.YUpAxis = _yUpAxis;
         }
 #endif
 
@@ -102,9 +102,9 @@ namespace UnityBulletML.Bullets
             return Random.Range(min, max);
         }
 
-        public BulletML.Vector2 PlayerPosition(IBullet targettedBullet)
+        public BulletMLI.Vector2 PlayerPosition(IBullet targettedBullet)
         {
-            return new BulletML.Vector2(_playerTransform.position.x * PixelPerUnit, _playerTransform.position.y * PixelPerUnit);
+            return new BulletMLI.Vector2(_playerTransform.position.x * PixelPerUnit, _playerTransform.position.y * PixelPerUnit);
         }
 
         public IBullet CreateBullet(bool topBullet = false)
@@ -144,12 +144,12 @@ namespace UnityBulletML.Bullets
             #region BulletML setup
 
             // Gameplay
-            BulletML.GameManager.GameDifficulty = GetDifficulty;
+            BulletMLI.GameManager.GameDifficulty = GetDifficulty;
 
             // Configuration
-            BulletML.Configuration.YUpAxis = _yUpAxis;
-            BulletML.Configuration.RandomNextFloat = RandomNextFloat;
-            BulletML.Configuration.RandomNextInt = RandomNextInt;
+            BulletMLI.Configuration.YUpAxis = _yUpAxis;
+            BulletMLI.Configuration.RandomNextFloat = RandomNextFloat;
+            BulletMLI.Configuration.RandomNextInt = RandomNextInt;
 
             #endregion
 

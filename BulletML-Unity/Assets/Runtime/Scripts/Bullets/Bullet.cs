@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UnityBulletML.Bullets
 {
-    public class Bullet : BulletML.Bullet
+    public class Bullet : BulletMLI.Bullet
     {
         #region Properties
 
@@ -62,7 +62,7 @@ namespace UnityBulletML.Bullets
 
         #endregion
 
-        public Bullet(BulletML.IBulletManager bulletManager) : base(bulletManager)
+        public Bullet(BulletMLI.IBulletManager bulletManager) : base(bulletManager)
         {
             _bulletManager = bulletManager as BulletManager;
         }

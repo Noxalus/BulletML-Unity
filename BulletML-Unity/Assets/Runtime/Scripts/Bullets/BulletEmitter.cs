@@ -1,4 +1,4 @@
-﻿using BulletML;
+﻿using BulletMLI;
 using UnityEngine;
 
 namespace UnityBulletML.Bullets
