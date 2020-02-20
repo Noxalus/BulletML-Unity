@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityBulletML.Bullets;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace UnityBulletMLSample
 {
@@ -10,7 +10,7 @@ namespace UnityBulletMLSample
     {
         public BulletManager BulletManager;
         public BulletEmitter BulletEmitter;
-        public Text CurrentPatternText;
+        public TextMeshProUGUI CurrentPatternText;
 
         private int _currentPatternIndex;
         private List<string> _patternNames;

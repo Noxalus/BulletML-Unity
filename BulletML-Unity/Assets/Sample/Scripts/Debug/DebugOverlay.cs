@@ -1,13 +1,13 @@
-﻿using UnityBulletML.Bullets;
+﻿using TMPro;
+using UnityBulletML.Bullets;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace UnityBulletMLSample
 {
     public class DebugOverlay : MonoBehaviour
     {
-        public Text FPSCounterText;
-        public Text BulletCounterText;
+        public TextMeshProUGUI FPSCounterText;
+        public TextMeshProUGUI BulletCounterText;
         public BulletManager BulletManager;
         public CanvasGroup CanvasGroup;
 
