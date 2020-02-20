@@ -39,7 +39,7 @@ namespace UnityBulletML.Bullets
         private void BatchAndRender()
         {
             // If we dont have projectiles to render then just get out
-            if (_bulletManager.Bullets.Count <= 0)
+            if (BulletManager.Bullets.Count <= 0)
                 return;
 
             // Draw each batch

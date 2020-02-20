@@ -2,12 +2,59 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Unity.Entities;
 using UnityBulletML.Bullets.Data;
 using UnityEngine;
+using Unity.Rendering;
+using Unity.Transforms;
+using Unity.Collections;
+using Unity.Mathematics;
+using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
 
 namespace UnityBulletML.Bullets
 {
+    public class MoveSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            int index = 0;
+            Entities.ForEach((ref Translation translation) =>
+            {
+                if (BulletManager.Bullets != null && index < BulletManager.Bullets.Count)
+                {
+                    translation.Value.x = BulletManager.Bullets[index].X / 100f;
+                    translation.Value.y = BulletManager.Bullets[index].Y / 100f;
+                    index++;
+                }
+                else
+                {
+                    return;
+                }
+            });
+        }
+    }
+
+    public class RotatorSystem : ComponentSystem
+    {
+        protected override void OnUpdate()
+        {
+            int index = 0;
+            Entities.ForEach((ref Rotation rotation) =>
+            {
+                if (BulletManager.Bullets != null && index < BulletManager.Bullets.Count)
+                {
+                    rotation.Value = quaternion.RotateZ(BulletManager.Bullets[index].Rotation);
+                    index++;
+                }
+                else
+                {
+                    return;
+                }
+            });
+        }
+    }
+
     public class BulletManager : MonoBehaviour, IBulletManager
     {
         #region Editor
@@ -34,6 +81,7 @@ namespace UnityBulletML.Bullets
 
         [Header("References")]
         [SerializeField] private Transform _playerTransform = null;
+        [SerializeField] private Material _bulletMaterial = null;
 
         [Header("Bullet's data")]
         [SerializeField] private int _maxBulletsAmount = 10000;
@@ -58,12 +106,18 @@ namespace UnityBulletML.Bullets
         private List<Vector4[]> _bulletSpriteOffsetsBatches = new List<Vector4[]>();
         private List<Vector4[]> _bulletColorsBatches = new List<Vector4[]>();
 
-        private List<Bullet> _bullets;
+        private static List<Bullet> _bullets = new List<Bullet>();
         private Queue<Bullet> _unusedBullets = new Queue<Bullet>();
         private Dictionary<string, BulletPattern> _bulletPatterns = new Dictionary<string, BulletPattern>();
 
         private bool _pause;
         private Camera _camera;
+
+        // ECS
+        //private static SpriteInstanceRenderer[] _renderers;
+        private static EntityManager _entityManager;
+        //private static SpriteInstanceRenderer _bulletRenderer;
+        private static EntityArchetype _bulletArchetype;
 
         #endregion
 
@@ -74,7 +128,7 @@ namespace UnityBulletML.Bullets
         public List<Vector4[]> BulletColorsBatches => _bulletColorsBatches;
 
         public float PixelPerUnit => _bulletsTexture.pixelsPerUnit;
-        public List<Bullet> Bullets => _bullets;
+        public static List<Bullet> Bullets => _bullets;
         public BulletProfile[] BulletProfiles => _bulletProfiles;
 
         public float BulletInitialSize => _bulletInitialSize;
@@ -139,6 +193,47 @@ namespace UnityBulletML.Bullets
 
         #endregion
 
+        #region ECS
+
+        //[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        //public void Initialize()
+        private void Start()
+        {
+            _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+            // Allocate NativeArray to collect the entities
+            NativeArray<Entity> entities = new NativeArray<Entity>(10000, Allocator.Temp);
+
+            _bulletArchetype = _entityManager.CreateArchetype(
+                typeof(RenderMesh),
+                typeof(RenderBounds),
+                typeof(LocalToWorld),
+                typeof(Translation),
+                typeof(Rotation)
+            );
+
+            // Create an entity from the archetype
+            _entityManager.CreateEntity(_bulletArchetype, entities);
+
+            Mesh quad = MeshUtils.GenerateQuad(1, Vector2.one * 0.5f);
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                Entity entity = entities[i];
+                // Use the entity manager to set the component's data
+
+                _entityManager.SetSharedComponentData(entity, new RenderMesh
+                {
+                    mesh = quad,
+                    material = _bulletMaterial
+                });
+            }
+
+            entities.Dispose();
+        }
+
+        #endregion
+
         void Awake()
         {
             #region BulletML setup
@@ -182,43 +277,43 @@ namespace UnityBulletML.Bullets
 
                 currentBullet.Update(Time.fixedDeltaTime);
 
-                int batchIndex = i / MAX_BATCH_AMOUNT;
-                int elementIndex = i % MAX_BATCH_AMOUNT;
+                //int batchIndex = i / MAX_BATCH_AMOUNT;
+                //int elementIndex = i % MAX_BATCH_AMOUNT;
 
-                // Do we need to create a new batch?
-                if (_bulletMatricesBatches.Count <= batchIndex)
-                {
-                    _bulletMatricesBatches.Add(new Matrix4x4[MAX_BATCH_AMOUNT]);
-                    _bulletSpriteOffsetsBatches.Add(new Vector4[MAX_BATCH_AMOUNT]);
-                    _bulletColorsBatches.Add(new Vector4[MAX_BATCH_AMOUNT]);
-                }
+                //// Do we need to create a new batch?
+                //if (_bulletMatricesBatches.Count <= batchIndex)
+                //{
+                //    _bulletMatricesBatches.Add(new Matrix4x4[MAX_BATCH_AMOUNT]);
+                //    _bulletSpriteOffsetsBatches.Add(new Vector4[MAX_BATCH_AMOUNT]);
+                //    _bulletColorsBatches.Add(new Vector4[MAX_BATCH_AMOUNT]);
+                //}
 
-                if (!currentBullet.Used)
-                {
-                    currentBullet.Hidden = true;
-                    _unusedBullets.Enqueue(currentBullet);
+                //if (!currentBullet.Used)
+                //{
+                //    currentBullet.Hidden = true;
+                //    _unusedBullets.Enqueue(currentBullet);
 
-                    // Hide unused bullets
-                    _bulletMatricesBatches[batchIndex][elementIndex] = Matrix4x4.zero;
-                    _bulletSpriteOffsetsBatches[batchIndex][elementIndex] = Vector4.zero;
-                    _bulletColorsBatches[batchIndex][elementIndex] = Vector4.zero;
-                }
-                else
-                {
-                    // We don't want to render top bullets
-                    if (!currentBullet.IsTopBullet())
-                    {
-                        // Update current bullet's data arrays
-                        _bulletMatricesBatches[batchIndex][elementIndex] = currentBullet.TransformMatrix;
-                        _bulletSpriteOffsetsBatches[batchIndex][elementIndex] = GetTextureOffset(currentBullet.SpriteIndex);
-                        _bulletColorsBatches[batchIndex][elementIndex] = new Vector4(
-                            currentBullet.Color.R / 255f,
-                            currentBullet.Color.G / 255f,
-                            currentBullet.Color.B / 255f,
-                            currentBullet.Color.A / 255f
-                        );
-                    }
-                }
+                //    // Hide unused bullets
+                //    _bulletMatricesBatches[batchIndex][elementIndex] = Matrix4x4.zero;
+                //    _bulletSpriteOffsetsBatches[batchIndex][elementIndex] = Vector4.zero;
+                //    _bulletColorsBatches[batchIndex][elementIndex] = Vector4.zero;
+                //}
+                //else
+                //{
+                //    // We don't want to render top bullets
+                //    if (!currentBullet.IsTopBullet())
+                //    {
+                //        // Update current bullet's data arrays
+                //        _bulletMatricesBatches[batchIndex][elementIndex] = currentBullet.TransformMatrix;
+                //        _bulletSpriteOffsetsBatches[batchIndex][elementIndex] = GetTextureOffset(currentBullet.SpriteIndex);
+                //        _bulletColorsBatches[batchIndex][elementIndex] = new Vector4(
+                //            currentBullet.Color.R / 255f,
+                //            currentBullet.Color.G / 255f,
+                //            currentBullet.Color.B / 255f,
+                //            currentBullet.Color.A / 255f
+                //        );
+                //    }
+                //}
             }
         }
 

@@ -460,7 +460,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &357718791
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1672,8 +1672,10 @@ MonoBehaviour:
   _difficulty: 0.5
   _patternFilesFolder: Patterns
   _playerTransform: {fileID: 396486025}
+  _bulletMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  _bulletMaterial: {fileID: 2100000, guid: 344c9d3946d45764e907c0b1ea2ba107, type: 2}
   _maxBulletsAmount: 10000
-  _bulletInitialSize: 2
+  _bulletInitialSize: 1
   _bulletsWidthBoundary: {x: -0.25, y: 1.25}
   _bulletsHeightBoundary: {x: -0.25, y: 1.25}
   _bulletsTexture: {fileID: 21300000, guid: 77113ab205d8a5248b4e720bb9f27c7b, type: 3}
@@ -2153,7 +2155,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!20 &1942163745
 Camera:
   m_ObjectHideFlags: 0
@@ -2392,7 +2394,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2080749930}
   - component: {fileID: 2080749929}
-  - component: {fileID: 2080749928}
   - component: {fileID: 2080749927}
   m_Layer: 0
   m_Name: Main Camera
@@ -2403,14 +2404,6 @@ GameObject:
   m_IsActive: 1
 --- !u!81 &2080749927
 AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2080749926}
-  m_Enabled: 1
---- !u!124 &2080749928
-Behaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2468,7 +2461,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2080749926}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1634324581}

@@ -37,9 +37,9 @@ namespace UnityBulletML.Bullets
 
         private void CheckPlayerCollision()
         {
-            for (int i = 0; i < _bulletManager.Bullets.Count; i++)
+            for (int i = 0; i < BulletManager.Bullets.Count; i++)
             {
-                var currentBullet = _bulletManager.Bullets[i];
+                var currentBullet = BulletManager.Bullets[i];
 
                 // Ignore top bullets
                 if (currentBullet.IsTopBullet() || !currentBullet.Used)
