@@ -78,8 +78,8 @@ namespace UnityBulletML.Bullets
         // they don't take into account the Unity pixel per unit value
         public void SetPosition(Vector2 position)
         {
-            X = position.x * _bulletManager.PixelPerUnit;
-            Y = position.y * _bulletManager.PixelPerUnit;
+            _x = position.x;
+            _y = position.y;
         }
 
         public void SetDirection(float direction)
