@@ -11,9 +11,24 @@ using Unity.Collections;
 using Unity.Mathematics;
 using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
+using Unity.Jobs;
+using System;
+using Unity.Burst;
 
 namespace UnityBulletML.Bullets
 {
+    //[BurstCompile]
+    public struct UpdateBulletJob : IJob
+    {
+        public int BulletIndex;
+        public float DeltaTime;
+
+        public void Execute()
+        {
+            BulletManager.Bullets[BulletIndex].Update(DeltaTime);
+        }
+    }
+
     public class MoveSystem : ComponentSystem
     {
         protected override void OnUpdate()
@@ -113,6 +128,8 @@ namespace UnityBulletML.Bullets
         private bool _pause;
         private Camera _camera;
 
+        private static Unity.Mathematics.Random StaticRandom = new Unity.Mathematics.Random((uint)DateTime.Now.Millisecond);
+
         // ECS
         //private static SpriteInstanceRenderer[] _renderers;
         private static EntityManager _entityManager;
@@ -128,6 +145,7 @@ namespace UnityBulletML.Bullets
         public List<Vector4[]> BulletColorsBatches => _bulletColorsBatches;
 
         public float PixelPerUnit => _bulletsTexture.pixelsPerUnit;
+        public static float StaticPixelPerUnit => 100f;// _bulletsTexture.pixelsPerUnit;
         public static List<Bullet> Bullets => _bullets;
         public BulletProfile[] BulletProfiles => _bulletProfiles;
 
@@ -148,17 +166,17 @@ namespace UnityBulletML.Bullets
 
         private float RandomNextFloat()
         {
-            return Random.value;
+            return StaticRandom.NextFloat();
         }
 
         private int RandomNextInt(int min, int max)
         {
-            return Random.Range(min, max);
+            return StaticRandom.NextInt(min, max);
         }
 
         public BulletMLI.Vector2 PlayerPosition(IBullet targettedBullet)
         {
-            return new BulletMLI.Vector2(_playerTransform.position.x * PixelPerUnit, _playerTransform.position.y * PixelPerUnit);
+            return new BulletMLI.Vector2(_playerTransform.position.x * StaticPixelPerUnit, _playerTransform.position.y * StaticPixelPerUnit);
         }
 
         public IBullet CreateBullet(bool topBullet = false)
@@ -263,8 +281,32 @@ namespace UnityBulletML.Bullets
             _pause = false;
         }
 
-        public void FixedUpdate()
+        private void Update()
         {
+            NativeList<JobHandle> jobHandles = new NativeList<JobHandle>(Allocator.Temp);
+            for (int i = 0; i < _bullets.Count; i++)
+            {
+                JobHandle jobHandle = UpdateBulletTaskJob(i);
+                jobHandles.Add(jobHandle);
+            }
+
+            JobHandle.CompleteAll(jobHandles);
+            jobHandles.Dispose();
+        }
+
+        private JobHandle UpdateBulletTaskJob(int bulletIndex)
+        {
+            UpdateBulletJob job = new UpdateBulletJob();
+            job.BulletIndex = bulletIndex;
+            job.DeltaTime = Time.deltaTime;
+            
+            return job.Schedule();
+        }
+
+        private void FixedUpdate()
+        {
+            return;
+
             if (_pause)
                 return;
 

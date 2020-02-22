@@ -1,5 +1,6 @@
 ﻿using UnityBulletML.Bullets.Data;
 using UnityEngine;
+using UnityBulletManager = UnityBulletML.Bullets.BulletManager;
 
 namespace UnityBulletML.Bullets
 {
@@ -50,14 +51,14 @@ namespace UnityBulletML.Bullets
 
         public override float X
         {
-            get { return _x * _bulletManager.PixelPerUnit; }
-            set { _x = value / _bulletManager.PixelPerUnit; }
+            get { return _x * UnityBulletManager.StaticPixelPerUnit; }
+            set { _x = value / UnityBulletManager.StaticPixelPerUnit; }
         }
 
         public override float Y
         {
-            get { return _y * _bulletManager.PixelPerUnit; }
-            set { _y = value / _bulletManager.PixelPerUnit; }
+            get { return _y * UnityBulletManager.StaticPixelPerUnit; }
+            set { _y = value / UnityBulletManager.StaticPixelPerUnit; }
         }
 
         #endregion
@@ -102,6 +103,8 @@ namespace UnityBulletML.Bullets
 
         public bool IsOutOfBound()
         {
+            return false;
+
             var screenSpacePosition = _bulletManager.Camera.WorldToViewportPoint(Position);
 
             return !(
