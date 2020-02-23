@@ -14,6 +14,7 @@ using Vector2 = UnityEngine.Vector2;
 using Unity.Jobs;
 using System;
 using Unity.Burst;
+using UnityEngine.Jobs;
 
 namespace UnityBulletML.Bullets
 {
@@ -29,6 +30,22 @@ namespace UnityBulletML.Bullets
         }
     }
 
+    //[BurstCompile]
+    public struct UpdateBulletJobParallel : IJobParallelFor//Transform
+    {
+        [ReadOnly] public float DeltaTime;
+
+        public void Execute(int index)
+        {
+            BulletManager.Bullets[index].Update(DeltaTime);
+        }
+
+        //public void Execute(int index, TransformAccess transform)
+        //{
+        //    BulletManager.Bullets[index].Update(DeltaTime);
+        //}
+    }
+
     public class MoveSystem : ComponentSystem
     {
         protected override void OnUpdate()
@@ -40,35 +57,59 @@ namespace UnityBulletML.Bullets
                 {
                     translation.Value.x = BulletManager.Bullets[index].X / 100f;
                     translation.Value.y = BulletManager.Bullets[index].Y / 100f;
+                    translation.Value.z = -5f;
                     index++;
                 }
-                else
-                {
-                    return;
-                }
+                //else
+                //{
+                //    translation.Value.x = 1000f;
+                //    translation.Value.y = 1000f;
+                //}
             });
         }
     }
 
-    public class RotatorSystem : ComponentSystem
-    {
-        protected override void OnUpdate()
-        {
-            int index = 0;
-            Entities.ForEach((ref Rotation rotation) =>
-            {
-                if (BulletManager.Bullets != null && index < BulletManager.Bullets.Count)
-                {
-                    rotation.Value = quaternion.RotateZ(BulletManager.Bullets[index].Rotation);
-                    index++;
-                }
-                else
-                {
-                    return;
-                }
-            });
-        }
-    }
+    //public class RotatorSystem : ComponentSystem
+    //{
+    //    protected override void OnUpdate()
+    //    {
+    //        int index = 0;
+    //        Entities.ForEach((ref Rotation rotation) =>
+    //        {
+    //            if (BulletManager.Bullets != null && index < BulletManager.Bullets.Count)
+    //            {
+    //                rotation.Value = quaternion.RotateZ(BulletManager.Bullets[index].Rotation);
+    //                index++;
+    //            }
+    //            else
+    //            {
+    //                return;
+    //            }
+    //        });
+    //    }
+    //}
+
+    //public class LocalToWorldSystem : ComponentSystem
+    //{
+    //    protected override void OnUpdate()
+    //    {
+    //        int index = 0;
+
+    //        Entities.ForEach((ref LocalToWorld localToWorld) =>
+    //        {
+    //            if (BulletManager.Bullets != null && index < BulletManager.Bullets.Count)
+    //            {
+    //                localToWorld.
+    //                rotation.Value = quaternion.RotateZ(BulletManager.Bullets[index].Rotation);
+    //                index++;
+    //            }
+    //            else
+    //            {
+    //                return;
+    //            }
+    //        });
+    //    }
+    //}
 
     public class BulletManager : MonoBehaviour, IBulletManager
     {
@@ -136,6 +177,8 @@ namespace UnityBulletML.Bullets
         //private static SpriteInstanceRenderer _bulletRenderer;
         private static EntityArchetype _bulletArchetype;
 
+        private static BulletMLI.Vector2 _playerPosition = new BulletMLI.Vector2();
+
         #endregion
 
         #region Properties
@@ -176,7 +219,11 @@ namespace UnityBulletML.Bullets
 
         public BulletMLI.Vector2 PlayerPosition(IBullet targettedBullet)
         {
-            return new BulletMLI.Vector2(_playerTransform.position.x * StaticPixelPerUnit, _playerTransform.position.y * StaticPixelPerUnit);
+            return _playerPosition;
+            //return new BulletMLI.Vector2(
+            //    _playerTransform.position.x * StaticPixelPerUnit, 
+            //    _playerTransform.position.y * StaticPixelPerUnit
+            //);
         }
 
         public IBullet CreateBullet(bool topBullet = false)
@@ -217,6 +264,8 @@ namespace UnityBulletML.Bullets
         //public void Initialize()
         private void Start()
         {
+            Application.targetFrameRate = 60;
+
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
             // Allocate NativeArray to collect the entities
@@ -245,6 +294,11 @@ namespace UnityBulletML.Bullets
                     mesh = quad,
                     material = _bulletMaterial
                 });
+
+                //_entityManager.SetSharedComponentData(entity, new RenderBounds
+                //{
+                //    Value = 
+                //});
             }
 
             entities.Dispose();
@@ -283,23 +337,46 @@ namespace UnityBulletML.Bullets
 
         private void Update()
         {
-            NativeList<JobHandle> jobHandles = new NativeList<JobHandle>(Allocator.Temp);
-            for (int i = 0; i < _bullets.Count; i++)
-            {
-                JobHandle jobHandle = UpdateBulletTaskJob(i);
-                jobHandles.Add(jobHandle);
-            }
+            _playerPosition.X = _playerTransform.position.x * StaticPixelPerUnit;
+            _playerPosition.Y = _playerTransform.position.y * StaticPixelPerUnit;
 
-            JobHandle.CompleteAll(jobHandles);
-            jobHandles.Dispose();
+            //NativeList<JobHandle> jobHandles = new NativeList<JobHandle>(Allocator.Temp);
+            //for (int i = 0; i < _bullets.Count; i++)
+            //{
+            //    JobHandle jobHandle = UpdateBulletTaskJob(i);
+            //    jobHandles.Add(jobHandle);
+            //}
+
+            //JobHandle.CompleteAll(jobHandles);
+            //jobHandles.Dispose();
+
+            //NativeArray<Bullet> bullets = new NativeArray<Bullet>(Bullets.Count, Allocator.TempJob);
+
+            UpdateBulletJobParallel job = new UpdateBulletJobParallel
+            {
+                DeltaTime = Time.deltaTime
+            };
+
+            //TransformAccessArray transformAccessArray = new TransformAccessArray(Bullets.Count);
+
+            //for (int i = 0; i < Bullets.Count; i++)
+            //{
+            //    Bullet bullet = (Bullet)Bullets[i];
+            //    transformAccessArray.Add(bullet.TransformMatrix);
+            //}
+
+            JobHandle jobHandle = job.Schedule(Bullets.Count, 1000);
+            jobHandle.Complete();
         }
 
         private JobHandle UpdateBulletTaskJob(int bulletIndex)
         {
-            UpdateBulletJob job = new UpdateBulletJob();
-            job.BulletIndex = bulletIndex;
-            job.DeltaTime = Time.deltaTime;
-            
+            UpdateBulletJob job = new UpdateBulletJob
+            {
+                BulletIndex = bulletIndex,
+                DeltaTime = Time.deltaTime
+            };
+
             return job.Schedule();
         }
 

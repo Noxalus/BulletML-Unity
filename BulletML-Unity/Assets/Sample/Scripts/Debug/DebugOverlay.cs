@@ -1,13 +1,13 @@
-﻿using TMPro;
-using UnityBulletML.Bullets;
+﻿using UnityBulletML.Bullets;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UnityBulletMLSample
 {
     public class DebugOverlay : MonoBehaviour
     {
-        public TextMeshProUGUI FPSCounterText;
-        public TextMeshProUGUI BulletCounterText;
+        public Text FPSCounterText;
+        public Text BulletCounterText;
         public BulletManager BulletManager;
         public CanvasGroup CanvasGroup;
 
@@ -23,7 +23,7 @@ namespace UnityBulletMLSample
             FPSCounterText.text = text;
 
             // Update bullet counter
-            BulletCounterText.text = string.Format("Bullets: " + BulletManager.Bullets.Count.ToString());
+            BulletCounterText.text = $"Bullets: {BulletManager.Bullets.Count.ToString()}";
         }
 
         public void Show(bool value)
