@@ -43,7 +43,7 @@ namespace UnityBulletML.Bullets
         }
 
         //[BurstCompile]
-        struct BulletSystemJob : IJobForEachWithEntity<Translation, Rotation>
+        struct BulletSystemJob : IJobForEachWithEntity<Translation, Rotation, Scale>
         {
             //[NativeDisableParallelForRestriction]
             //public ComponentDataFromEntity<Translation> translationsFromEntity;
@@ -52,7 +52,12 @@ namespace UnityBulletML.Bullets
 
             public float deltaTime;
 
-            public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, ref Rotation rotation)
+            public void Execute(
+                Entity entity,
+                [ReadOnly] int index, 
+                [ReadOnly] ref Translation translation, 
+                ref Rotation rotation,
+                ref Scale scale)
             {
                 if (BulletManager.Bullets != null && index < BulletManager.Bullets.Count)
                 {
@@ -62,6 +67,7 @@ namespace UnityBulletML.Bullets
                     translation.Value.y = BulletManager.Bullets[index].Y / 100f;
                     translation.Value.z = -5f;
                     rotation.Value = quaternion.RotateZ(BulletManager.Bullets[index].Rotation);
+                    scale.Value = BulletManager.Bullets[index].Scale;
                 }
 
                 //if (translationsFromEntity.Exists(target.targetEntity))
@@ -345,14 +351,15 @@ namespace UnityBulletML.Bullets
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
             // Allocate NativeArray to collect the entities
-            NativeArray<Entity> entities = new NativeArray<Entity>(10000, Allocator.Temp);
+            NativeArray<Entity> entities = new NativeArray<Entity>(_maxBulletsAmount, Allocator.Temp);
 
             _bulletArchetype = _entityManager.CreateArchetype(
                 typeof(RenderMesh),
                 typeof(RenderBounds),
                 typeof(LocalToWorld),
                 typeof(Translation),
-                typeof(Rotation)
+                typeof(Rotation),
+                typeof(Scale)
             );
 
             // Create an entity from the archetype
@@ -363,17 +370,17 @@ namespace UnityBulletML.Bullets
             for (int i = 0; i < entities.Length; i++)
             {
                 Entity entity = entities[i];
-                // Use the entity manager to set the component's data
 
+                // Use the entity manager to set the component's data
                 _entityManager.SetSharedComponentData(entity, new RenderMesh
                 {
                     mesh = quad,
                     material = _bulletMaterial
                 });
 
-                //_entityManager.SetSharedComponentData(entity, new RenderBounds
+                //_entityManager.SetComponentData(entity, new Scale
                 //{
-                //    Value = 
+                //    Value = 1f
                 //});
             }
 
@@ -413,8 +420,8 @@ namespace UnityBulletML.Bullets
 
         private void Update()
         {
-            //_playerPosition.X = _playerTransform.position.x * StaticPixelPerUnit;
-            //_playerPosition.Y = _playerTransform.position.y * StaticPixelPerUnit;
+            _playerPosition.X = _playerTransform.position.x * StaticPixelPerUnit;
+            _playerPosition.Y = _playerTransform.position.y * StaticPixelPerUnit;
 
             ////NativeList<JobHandle> jobHandles = new NativeList<JobHandle>(Allocator.Temp);
             ////for (int i = 0; i < _bullets.Count; i++)
